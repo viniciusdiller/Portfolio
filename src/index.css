@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 222 47% 5%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 45% 8%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 45% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 189 100% 50%;
+    --primary-foreground: 222 47% 5%;
+
+    --secondary: 158 100% 50%;
+    --secondary-foreground: 222 47% 5%;
+
+    --muted: 222 40% 12%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 189 100% 50%;
+    --accent-foreground: 222 47% 5%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 222 40% 15%;
+    --input: 222 40% 15%;
+    --ring: 189 100% 50%;
+
+    --radius: 0.75rem;
+
+    --neon-cyan: 189 100% 50%;
+    --neon-cyan-glow: 189 100% 50%;
+    --neon-green: 158 100% 50%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(189 100% 50%), hsl(158 100% 50%));
+    --gradient-dark: linear-gradient(180deg, hsl(222 47% 5%), hsl(222 47% 3%));
+    
+    --shadow-neon: 0 0 20px hsl(189 100% 50% / 0.5);
+    --shadow-card: 0 8px 32px hsl(222 47% 2% / 0.5);
+    
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+  }
+
+  code, pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .glow-text {
+    text-shadow: 0 0 20px hsl(var(--neon-cyan) / 0.5);
+  }
+
+  .card-glass {
+    background: hsl(var(--card) / 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 10px hsl(var(--neon-cyan) / 0.3);
+    }
+    to {
+      box-shadow: 0 0 30px hsl(var(--neon-cyan) / 0.8), 0 0 60px hsl(var(--neon-cyan) / 0.4);
+    }
+  }
+}
