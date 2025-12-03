@@ -109,7 +109,7 @@ const Contact = () => {
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
           <Card className="card-glass p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form ref={form} onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label
                   htmlFor="name"
@@ -126,6 +126,7 @@ const Contact = () => {
                   required
                   className="bg-background/50 border-border focus:border-primary"
                   disabled={isSubmitting}
+                  autoComplete="name"
                 />
               </div>
 
@@ -146,6 +147,7 @@ const Contact = () => {
                   required
                   className="bg-background/50 border-border focus:border-primary"
                   disabled={isSubmitting}
+                  autoComplete="email"
                 />
               </div>
 
