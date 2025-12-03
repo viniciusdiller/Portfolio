@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import aquiTemOds from "@/assets/AquiTemODS.png";
 import meiDeSaqua from "@/assets/MEIdeSaqua.png";
-import RanchoAFG from "@/assets/RanchoAFG.png";
+import RanchoAFG from "@/assets/RanchoAfg.png";
 import AnaliseEmail from "@/assets/AnaliseEmail.png";
 import Olimpiada from "@/assets/Olimpiada.png";
 import SiteSemiJoia from "@/assets/SiteSemiJoia.png";
