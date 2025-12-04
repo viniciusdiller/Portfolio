@@ -61,7 +61,7 @@ const Projects = () => {
         "Aplicação web que permite aos usuários buscar informações detalhadas sobre atletas participantes das Olimpíadas de 2024, incluindo estatísticas, histórico de desempenho e curiosidades.",
       image: Olimpiada,
       technologies: ["JS", "HTML", "CSS"],
-      liveUrl: "olimpiadas-ashen-pi.vercel.app/",
+      liveUrl: "https://olimpiadas-ashen-pi.vercel.app/",
       destaque: false,
     },
     {
