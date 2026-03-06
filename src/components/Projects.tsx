@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import aquiTemOds from "@/assets/AquiTemODS.png";
 import meiDeSaqua from "@/assets/MEIdeSaqua.png";
+import RodizioRace from "@/assets/RodizioRace.png";
 import RanchoAFG from "@/assets/RanchoAfg.png";
 import AnaliseEmail from "@/assets/AnaliseEmail.png";
 import Olimpiada from "@/assets/Olimpiada.png";
@@ -36,6 +37,16 @@ const Projects = () => {
       liveUrl: "https://meidesaqua.saquarema.rj.gov.br",
       destaque: true,
       contribuitor: "viniciusvalledev",
+    },
+    {
+      title: "Rodízio Race",
+      description:
+        "Uma plataforma projetada para gamificar encontros sociais em rodízios. O site permite a criação de salas privadas, escolha de avatares personalizados, um ranking ao vivo e um feed de fotos para validação dos pontos!",
+      image: RodizioRace,
+      technologies: ["TypeScript", "Supabase", "API", "Translate"],
+      liveUrl: "https://rodiziorace.mechama.eu/",
+      destaque: true,
+      contribuitor: "ramorimdias",
     },
     {
       title: "Rancho AFG",
@@ -73,7 +84,6 @@ const Projects = () => {
       liveUrl: "https://site-semi-joias.vercel.app/",
       destaque: false,
     },
-    // Adicione mais projetos aqui para testar o grid...
   ];
 
   const destaqueProjects = projects.filter((p) => p.destaque);
