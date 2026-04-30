@@ -9,6 +9,8 @@ import RanchoAFG from "@/assets/RanchoAfg.png";
 import AnaliseEmail from "@/assets/AnaliseEmail.png";
 import Olimpiada from "@/assets/Olimpiada.png";
 import SiteSemiJoia from "@/assets/SiteSemiJoia.png";
+import APGEmpresa from "@/assets/APGEmpresa.png";
+import RafaelROdrigues from "@/assets/RafaelRodrigues.png";
 
 const sharedGovTechStack = [
   "React",
@@ -56,7 +58,7 @@ const Projects = () => {
       title: "Rafael Rodrigues Imóveis",
       description:
         "Site imobiliário com painel administrativo exclusivo para o corretor, que possui controle total sobre as informações exibidas no site: cadastro e edição de imóveis, gerênciamento de fotos, valores e detalhes de cada listagem, tudo sem depender de terceiros.",
-      image: meiDeSaqua,
+      image: RafaelROdrigues,
       technologies: sharedGovTechStack,
       liveUrl: "https://rafaelrodriguesimoveis.com.br/",
       destaque: false,
@@ -66,7 +68,7 @@ const Projects = () => {
       title: "APG Empresa",
       description:
         "Site institucional com área administrativa completa: sistema de posts com criação, edição e categorização de conteúdo, moderação de comentários e gestão de usuários. O painel dá controle total sobre o que é publicado e quem interage na plataforma.",
-      image: aquiTemOds,
+      image: APGEmpresa,
       technologies: sharedGovTechStack,
       liveUrl: "https://apgempresa.com/",
       destaque: false,
@@ -260,7 +262,10 @@ const Projects = () => {
                     {project.title}
                   </h3>
                   {project.award && (
-                    <Badge variant="secondary" className="text-[10px] whitespace-nowrap">
+                    <Badge
+                      variant="secondary"
+                      className="text-[10px] whitespace-nowrap"
+                    >
                       {project.award}
                     </Badge>
                   )}
@@ -301,7 +306,11 @@ const Projects = () => {
                     className="w-full group/btn hover:bg-primary hover:text-primary-foreground"
                     asChild
                   >
-                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       Acessar
                       <ExternalLink className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform" />
                     </a>
