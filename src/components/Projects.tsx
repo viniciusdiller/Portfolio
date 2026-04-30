@@ -9,34 +9,40 @@ import RanchoAFG from "@/assets/RanchoAfg.png";
 import AnaliseEmail from "@/assets/AnaliseEmail.png";
 import Olimpiada from "@/assets/Olimpiada.png";
 import SiteSemiJoia from "@/assets/SiteSemiJoia.png";
+import APGEmpresa from "@/assets/APGEmpresa.png";
+import RafaelROdrigues from "@/assets/RafaelRodrigues.png";
+
+const sharedGovTechStack = [
+  "React",
+  "TypeScript",
+  "Node.js",
+  "PostgreSQL",
+  "Tailwind CSS",
+];
 
 const Projects = () => {
   const projects = [
     {
-      title: "AquiTemODS",
-      description:
-        "Plataforma digital para a Prefeitura de Saquarema focada nos Objetivos de Desenvolvimento Sustentável. Sistema completo de gestão e transparência de ações municipais alinhadas aos ODS da ONU.",
-      image: aquiTemOds,
-      technologies: [
-        "React",
-        "TypeScript",
-        "Node.js",
-        "PostgreSQL",
-        "Tailwind CSS",
-      ],
-      liveUrl: "https://aquitemods.saquarema.rj.gov.br",
-      destaque: true,
-      contribuitor: "viniciusvalledev",
-    },
-    {
       title: "MEIdeSaquá",
       description:
-        "Sistema de gestão e cadastro para Microempreendedores Individuais (MEI) de Saquarema. Plataforma que facilita o registro, acompanhamento e suporte aos MEIs locais.",
+        'Sistema de gestão e cadastro para Microempreendedores Individuais (MEI) de Saquarema. Plataforma que facilita o registro, acompanhamento e suporte aos MEIs locais. Ganhou 1° lugar do Prêmio PSPE "Sala do Empreendedor" em 2026.',
       image: meiDeSaqua,
-      technologies: ["React", "TypeScript", "API REST", "Dashboard Admin"],
+      technologies: sharedGovTechStack,
       liveUrl: "https://meidesaqua.saquarema.rj.gov.br",
       destaque: true,
       contribuitor: "viniciusvalledev",
+      award: "1° lugar • Prêmio PSPE 2026",
+    },
+    {
+      title: "AquiTemODS",
+      description:
+        'Plataforma digital para a Prefeitura de Saquarema focada nos Objetivos de Desenvolvimento Sustentável. Sistema completo de gestão e transparência de ações municipais alinhadas aos ODS da ONU. Ganhou 2° lugar na categoria "Gestão Inovadora".',
+      image: aquiTemOds,
+      technologies: sharedGovTechStack,
+      liveUrl: "https://aquitemods.saquarema.rj.gov.br",
+      destaque: true,
+      contribuitor: "viniciusvalledev",
+      award: "2° lugar • Gestão Inovadora",
     },
     {
       title: "Rodízio Race",
@@ -45,8 +51,28 @@ const Projects = () => {
       image: RodizioRace,
       technologies: ["TypeScript", "Supabase", "API", "Translate"],
       liveUrl: "https://rodiziorace.mechama.eu/",
-      destaque: true,
+      destaque: false,
       contribuitor: "ramorimdias",
+    },
+    {
+      title: "Rafael Rodrigues Imóveis",
+      description:
+        "Site imobiliário com painel administrativo exclusivo para o corretor, que possui controle total sobre as informações exibidas no site: cadastro e edição de imóveis, gerênciamento de fotos, valores e detalhes de cada listagem, tudo sem depender de terceiros.",
+      image: RafaelROdrigues,
+      technologies: sharedGovTechStack,
+      liveUrl: "https://rafaelrodriguesimoveis.com.br/",
+      destaque: false,
+      contribuitor: "viniciusvalledev",
+    },
+    {
+      title: "APG Empresa",
+      description:
+        "Site institucional com área administrativa completa: sistema de posts com criação, edição e categorização de conteúdo, moderação de comentários e gestão de usuários. O painel dá controle total sobre o que é publicado e quem interage na plataforma.",
+      image: APGEmpresa,
+      technologies: sharedGovTechStack,
+      liveUrl: "https://apgempresa.com/",
+      destaque: false,
+      contribuitor: "SouzaDioggo, arthurfrattani7",
     },
     {
       title: "Rancho AFG",
@@ -78,7 +104,7 @@ const Projects = () => {
     {
       title: "Site de Semi Joias",
       description:
-        "Site de vendar para uma marca de semi joias, apresentando produtos, e opções de contato para clientes interessados.",
+        "Site de venda para uma marca de semi joias, apresentando produtos e opções de contato para clientes interessados.",
       image: SiteSemiJoia,
       technologies: ["JS", "HTML", "CSS"],
       liveUrl: "https://site-semi-joias.vercel.app/",
@@ -106,7 +132,7 @@ const Projects = () => {
           </p>
         </div>
 
-        {/* AREA DOS dESTAQUES  */}
+        {/* AREA DOS DESTAQUES */}
         <div className="space-y-12 mb-20">
           {destaqueProjects.map((project, index) => (
             <Card
@@ -127,10 +153,15 @@ const Projects = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </a>
-                  <div className="absolute top-4 right-4 z-20">
+                  <div className="absolute top-4 right-4 z-20 flex flex-col gap-2 items-end">
                     <Badge className="bg-primary text-primary-foreground border-0 shadow-lg px-3 py-1 text-sm">
                       destaque
                     </Badge>
+                    {project.award && (
+                      <Badge className="bg-secondary text-secondary-foreground border-0 shadow-lg px-3 py-1 text-xs">
+                        {project.award}
+                      </Badge>
+                    )}
                   </div>
                 </div>
 
@@ -191,7 +222,7 @@ const Projects = () => {
           ))}
         </div>
 
-        {/* Divisor Visual (Opcional) */}
+        {/* Divisor Visual */}
         {normalProjects.length > 0 && (
           <div className="flex items-center gap-4 mb-8">
             <div className="h-[1px] flex-1 bg-border"></div>
@@ -201,7 +232,7 @@ const Projects = () => {
             <div className="h-[1px] flex-1 bg-border"></div>
           </div>
         )}
-        {/* AREA DOS OUTROS PROJETOS  */}
+        {/* AREA DOS OUTROS PROJETOS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {normalProjects.map((project, index) => (
             <Card
@@ -226,9 +257,19 @@ const Projects = () => {
               </div>
 
               <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                  {project.title}
-                </h3>
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <h3 className="text-xl font-bold group-hover:text-primary transition-colors">
+                    {project.title}
+                  </h3>
+                  {project.award && (
+                    <Badge
+                      variant="secondary"
+                      className="text-[10px] whitespace-nowrap"
+                    >
+                      {project.award}
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
                   {project.description}
                 </p>
@@ -251,12 +292,25 @@ const Projects = () => {
                     )}
                   </div>
 
+                  {project.contribuitor && (
+                    <p className="text-xs text-muted-foreground mb-4">
+                      Colaboração:{" "}
+                      <span className="text-foreground font-medium">
+                        {project.contribuitor}
+                      </span>
+                    </p>
+                  )}
+
                   <Button
                     variant="outline"
                     className="w-full group/btn hover:bg-primary hover:text-primary-foreground"
                     asChild
                   >
-                    <a href={project.liveUrl} target="_blank">
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       Acessar
                       <ExternalLink className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform" />
                     </a>
