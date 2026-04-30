@@ -21,17 +21,6 @@ const sharedGovTechStack = [
 const Projects = () => {
   const projects = [
     {
-      title: "AquiTemODS",
-      description:
-        'Plataforma digital para a Prefeitura de Saquarema focada nos Objetivos de Desenvolvimento Sustentável. Sistema completo de gestão e transparência de ações municipais alinhadas aos ODS da ONU. Ganhou 2° lugar na categoria "Gestão Inovadora".',
-      image: aquiTemOds,
-      technologies: sharedGovTechStack,
-      liveUrl: "https://aquitemods.saquarema.rj.gov.br",
-      destaque: true,
-      contribuitor: "viniciusvalledev",
-      award: "2° lugar • Gestão Inovadora",
-    },
-    {
       title: "MEIdeSaquá",
       description:
         'Sistema de gestão e cadastro para Microempreendedores Individuais (MEI) de Saquarema. Plataforma que facilita o registro, acompanhamento e suporte aos MEIs locais. Ganhou 1° lugar do Prêmio PSPE "Sala do Empreendedor" em 2026.',
@@ -43,13 +32,34 @@ const Projects = () => {
       award: "1° lugar • Prêmio PSPE 2026",
     },
     {
+      title: "AquiTemODS",
+      description:
+        'Plataforma digital para a Prefeitura de Saquarema focada nos Objetivos de Desenvolvimento Sustentável. Sistema completo de gestão e transparência de ações municipais alinhadas aos ODS da ONU. Ganhou 2° lugar na categoria "Gestão Inovadora".',
+      image: aquiTemOds,
+      technologies: sharedGovTechStack,
+      liveUrl: "https://aquitemods.saquarema.rj.gov.br",
+      destaque: true,
+      contribuitor: "viniciusvalledev",
+      award: "2° lugar • Gestão Inovadora",
+    },
+    {
+      title: "Rodízio Race",
+      description:
+        "Uma plataforma projetada para gamificar encontros sociais em rodízios. O site permite a criação de salas privadas, escolha de avatares personalizados, um ranking ao vivo e um feed de fotos para validação dos pontos!",
+      image: RodizioRace,
+      technologies: ["TypeScript", "Supabase", "API", "Translate"],
+      liveUrl: "https://rodiziorace.mechama.eu/",
+      destaque: false,
+      contribuitor: "ramorimdias",
+    },
+    {
       title: "Rafael Rodrigues Imóveis",
       description:
         "Site institucional e de apresentação imobiliária desenvolvido com ajuda do viniciusvalledev. O projeto segue a mesma base tecnológica utilizada em AquiTemODS e MEIdeSaquá, mantendo performance, organização e uma experiência moderna no frontend.",
       image: meiDeSaqua,
       technologies: sharedGovTechStack,
       liveUrl: "https://rafaelrodriguesimoveis.com.br/",
-      destaque: true,
+      destaque: false,
       contribuitor: "viniciusvalledev",
     },
     {
@@ -61,16 +71,6 @@ const Projects = () => {
       liveUrl: "https://apgempresa.com/",
       destaque: false,
       contribuitor: "SouzaDioggo, arthurfrattani7",
-    },
-    {
-      title: "Rodízio Race",
-      description:
-        "Uma plataforma projetada para gamificar encontros sociais em rodízios. O site permite a criação de salas privadas, escolha de avatares personalizados, um ranking ao vivo e um feed de fotos para validação dos pontos!",
-      image: RodizioRace,
-      technologies: ["TypeScript", "Supabase", "API", "Translate"],
-      liveUrl: "https://rodiziorace.mechama.eu/",
-      destaque: true,
-      contribuitor: "ramorimdias",
     },
     {
       title: "Rancho AFG",
@@ -130,7 +130,7 @@ const Projects = () => {
           </p>
         </div>
 
-        {/* AREA DOS dESTAQUES  */}
+        {/* AREA DOS DESTAQUES */}
         <div className="space-y-12 mb-20">
           {destaqueProjects.map((project, index) => (
             <Card
@@ -220,7 +220,7 @@ const Projects = () => {
           ))}
         </div>
 
-        {/* Divisor Visual (Opcional) */}
+        {/* Divisor Visual */}
         {normalProjects.length > 0 && (
           <div className="flex items-center gap-4 mb-8">
             <div className="h-[1px] flex-1 bg-border"></div>
@@ -230,7 +230,7 @@ const Projects = () => {
             <div className="h-[1px] flex-1 bg-border"></div>
           </div>
         )}
-        {/* AREA DOS OUTROS PROJETOS  */}
+        {/* AREA DOS OUTROS PROJETOS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {normalProjects.map((project, index) => (
             <Card
