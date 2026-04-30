@@ -55,7 +55,7 @@ const Projects = () => {
     {
       title: "Rafael Rodrigues Imóveis",
       description:
-        "Site institucional e de apresentação imobiliária desenvolvido com ajuda do viniciusvalledev. O projeto segue a mesma base tecnológica utilizada em AquiTemODS e MEIdeSaquá, mantendo performance, organização e uma experiência moderna no frontend.",
+        "Site imobiliário com painel administrativo exclusivo para o corretor, que possui controle total sobre as informações exibidas no site: cadastro e edição de imóveis, gerênciamento de fotos, valores e detalhes de cada listagem, tudo sem depender de terceiros.",
       image: meiDeSaqua,
       technologies: sharedGovTechStack,
       liveUrl: "https://rafaelrodriguesimoveis.com.br/",
@@ -65,7 +65,7 @@ const Projects = () => {
     {
       title: "APG Empresa",
       description:
-        "Projeto desenvolvido com ajuda de SouzaDioggo e arthurfrattani7, com foco principal no frontend. A aplicação utiliza a mesma stack dos demais projetos institucionais, priorizando identidade visual consistente, responsividade e navegação clara.",
+        "Site institucional com área administrativa completa: sistema de posts com criação, edição e categorização de conteúdo, moderação de comentários e gestão de usuários. O painel dá controle total sobre o que é publicado e quem interage na plataforma.",
       image: aquiTemOds,
       technologies: sharedGovTechStack,
       liveUrl: "https://apgempresa.com/",
@@ -102,7 +102,7 @@ const Projects = () => {
     {
       title: "Site de Semi Joias",
       description:
-        "Site de vendar para uma marca de semi joias, apresentando produtos, e opções de contato para clientes interessados.",
+        "Site de venda para uma marca de semi joias, apresentando produtos e opções de contato para clientes interessados.",
       image: SiteSemiJoia,
       technologies: ["JS", "HTML", "CSS"],
       liveUrl: "https://site-semi-joias.vercel.app/",
@@ -289,7 +289,10 @@ const Projects = () => {
 
                   {project.contribuitor && (
                     <p className="text-xs text-muted-foreground mb-4">
-                      Colaboração: <span className="text-foreground font-medium">{project.contribuitor}</span>
+                      Colaboração:{" "}
+                      <span className="text-foreground font-medium">
+                        {project.contribuitor}
+                      </span>
                     </p>
                   )}
 
