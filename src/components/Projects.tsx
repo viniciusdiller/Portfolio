@@ -10,33 +10,57 @@ import AnaliseEmail from "@/assets/AnaliseEmail.png";
 import Olimpiada from "@/assets/Olimpiada.png";
 import SiteSemiJoia from "@/assets/SiteSemiJoia.png";
 
+const sharedGovTechStack = [
+  "React",
+  "TypeScript",
+  "Node.js",
+  "PostgreSQL",
+  "Tailwind CSS",
+];
+
 const Projects = () => {
   const projects = [
     {
       title: "AquiTemODS",
       description:
-        "Plataforma digital para a Prefeitura de Saquarema focada nos Objetivos de Desenvolvimento Sustentável. Sistema completo de gestão e transparência de ações municipais alinhadas aos ODS da ONU.",
+        'Plataforma digital para a Prefeitura de Saquarema focada nos Objetivos de Desenvolvimento Sustentável. Sistema completo de gestão e transparência de ações municipais alinhadas aos ODS da ONU. Ganhou 2° lugar na categoria "Gestão Inovadora".',
       image: aquiTemOds,
-      technologies: [
-        "React",
-        "TypeScript",
-        "Node.js",
-        "PostgreSQL",
-        "Tailwind CSS",
-      ],
+      technologies: sharedGovTechStack,
       liveUrl: "https://aquitemods.saquarema.rj.gov.br",
       destaque: true,
       contribuitor: "viniciusvalledev",
+      award: "2° lugar • Gestão Inovadora",
     },
     {
       title: "MEIdeSaquá",
       description:
-        "Sistema de gestão e cadastro para Microempreendedores Individuais (MEI) de Saquarema. Plataforma que facilita o registro, acompanhamento e suporte aos MEIs locais.",
+        'Sistema de gestão e cadastro para Microempreendedores Individuais (MEI) de Saquarema. Plataforma que facilita o registro, acompanhamento e suporte aos MEIs locais. Ganhou 1° lugar do Prêmio PSPE "Sala do Empreendedor" em 2026.',
       image: meiDeSaqua,
-      technologies: ["React", "TypeScript", "API REST", "Dashboard Admin"],
+      technologies: sharedGovTechStack,
       liveUrl: "https://meidesaqua.saquarema.rj.gov.br",
       destaque: true,
       contribuitor: "viniciusvalledev",
+      award: "1° lugar • Prêmio PSPE 2026",
+    },
+    {
+      title: "Rafael Rodrigues Imóveis",
+      description:
+        "Site institucional e de apresentação imobiliária desenvolvido com ajuda do viniciusvalledev. O projeto segue a mesma base tecnológica utilizada em AquiTemODS e MEIdeSaquá, mantendo performance, organização e uma experiência moderna no frontend.",
+      image: meiDeSaqua,
+      technologies: sharedGovTechStack,
+      liveUrl: "https://rafaelrodriguesimoveis.com.br/",
+      destaque: true,
+      contribuitor: "viniciusvalledev",
+    },
+    {
+      title: "APG Empresa",
+      description:
+        "Projeto desenvolvido com ajuda de SouzaDioggo e arthurfrattani7, com foco principal no frontend. A aplicação utiliza a mesma stack dos demais projetos institucionais, priorizando identidade visual consistente, responsividade e navegação clara.",
+      image: aquiTemOds,
+      technologies: sharedGovTechStack,
+      liveUrl: "https://apgempresa.com/",
+      destaque: false,
+      contribuitor: "SouzaDioggo, arthurfrattani7",
     },
     {
       title: "Rodízio Race",
@@ -127,10 +151,15 @@ const Projects = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </a>
-                  <div className="absolute top-4 right-4 z-20">
+                  <div className="absolute top-4 right-4 z-20 flex flex-col gap-2 items-end">
                     <Badge className="bg-primary text-primary-foreground border-0 shadow-lg px-3 py-1 text-sm">
                       destaque
                     </Badge>
+                    {project.award && (
+                      <Badge className="bg-secondary text-secondary-foreground border-0 shadow-lg px-3 py-1 text-xs">
+                        {project.award}
+                      </Badge>
+                    )}
                   </div>
                 </div>
 
@@ -226,9 +255,16 @@ const Projects = () => {
               </div>
 
               <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                  {project.title}
-                </h3>
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <h3 className="text-xl font-bold group-hover:text-primary transition-colors">
+                    {project.title}
+                  </h3>
+                  {project.award && (
+                    <Badge variant="secondary" className="text-[10px] whitespace-nowrap">
+                      {project.award}
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
                   {project.description}
                 </p>
@@ -251,12 +287,18 @@ const Projects = () => {
                     )}
                   </div>
 
+                  {project.contribuitor && (
+                    <p className="text-xs text-muted-foreground mb-4">
+                      Colaboração: <span className="text-foreground font-medium">{project.contribuitor}</span>
+                    </p>
+                  )}
+
                   <Button
                     variant="outline"
                     className="w-full group/btn hover:bg-primary hover:text-primary-foreground"
                     asChild
                   >
-                    <a href={project.liveUrl} target="_blank">
+                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
                       Acessar
                       <ExternalLink className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform" />
                     </a>
