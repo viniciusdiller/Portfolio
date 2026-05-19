@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 const Navbar = () => {
+  const { language, setLanguage, t } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -10,7 +12,6 @@ const Navbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -24,16 +25,18 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { id: "home", label: "Início" },
-    { id: "about", label: "Sobre" },
-    { id: "projects", label: "Projetos" },
-    { id: "contact", label: "Contato" },
+    { id: "home", label: t.nav.home },
+    { id: "about", label: t.nav.about },
+    { id: "projects", label: t.nav.projects },
+    { id: "contact", label: t.nav.contact },
   ];
 
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/95 backdrop-blur-md border-b border-border/50 shadow-lg" : "bg-transparent"
+        isScrolled
+          ? "bg-background/95 backdrop-blur-md border-b border-border/50 shadow-lg"
+          : "bg-transparent"
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,17 +60,37 @@ const Navbar = () => {
                 {link.label}
               </Button>
             ))}
+            {/* Language Toggle */}
+            <button
+              onClick={() => setLanguage(language === "pt" ? "en" : "pt")}
+              className="ml-2 px-3 py-1.5 rounded-md border border-primary/40 text-primary font-mono text-sm hover:bg-primary/10 hover:border-primary transition-all duration-200 font-semibold tracking-wider"
+              aria-label="Toggle language"
+            >
+              {language === "pt" ? "EN" : "PT"}
+            </button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
+          {/* Mobile: Language + Menu Button */}
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              onClick={() => setLanguage(language === "pt" ? "en" : "pt")}
+              className="px-3 py-1.5 rounded-md border border-primary/40 text-primary font-mono text-sm hover:bg-primary/10 hover:border-primary transition-all duration-200 font-semibold tracking-wider"
+              aria-label="Toggle language"
+            >
+              {language === "pt" ? "EN" : "PT"}
+            </button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
