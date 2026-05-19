@@ -9,6 +9,7 @@ import emailjs from "@emailjs/browser";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
+import SplitTitle from "./SplitTitle";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,7 +18,8 @@ const Contact = () => {
   const { toast } = useToast();
   const form = useRef<HTMLFormElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const dividerRef = useRef<HTMLDivElement>(null);
   const formCardRef = useRef<HTMLDivElement>(null);
   const infoCardRef = useRef<HTMLDivElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,23 +27,25 @@ const Contact = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        headerRef.current,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.7, ease: "power3.out",
-          scrollTrigger: { trigger: headerRef.current, start: "top 85%" } }
+      gsap.fromTo(dividerRef.current,
+        { scaleX: 0, transformOrigin: "center" },
+        { scaleX: 1, duration: 0.8, ease: "power3.out",
+          scrollTrigger: { trigger: dividerRef.current, start: "top 88%" } }
       );
-      gsap.fromTo(
-        formCardRef.current,
-        { opacity: 0, x: -40 },
-        { opacity: 1, x: 0, duration: 0.7, ease: "power3.out",
-          scrollTrigger: { trigger: formCardRef.current, start: "top 85%" } }
+      gsap.fromTo(subtitleRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out",
+          scrollTrigger: { trigger: subtitleRef.current, start: "top 88%" } }
       );
-      gsap.fromTo(
-        infoCardRef.current,
-        { opacity: 0, x: 40 },
-        { opacity: 1, x: 0, duration: 0.7, ease: "power3.out",
-          scrollTrigger: { trigger: infoCardRef.current, start: "top 85%" } }
+      gsap.fromTo(formCardRef.current,
+        { opacity: 0, x: -50, rotateY: -5, transformOrigin: "right center" },
+        { opacity: 1, x: 0, rotateY: 0, duration: 0.8, ease: "back.out(1.2)",
+          scrollTrigger: { trigger: formCardRef.current, start: "top 88%" } }
+      );
+      gsap.fromTo(infoCardRef.current,
+        { opacity: 0, x: 50, rotateY: 5, transformOrigin: "left center" },
+        { opacity: 1, x: 0, rotateY: 0, duration: 0.8, ease: "back.out(1.2)",
+          scrollTrigger: { trigger: infoCardRef.current, start: "top 88%" } }
       );
     }, sectionRef);
     return () => ctx.revert();
@@ -86,12 +90,12 @@ const Contact = () => {
   return (
     <section id="contact" ref={sectionRef} className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-6xl">
-        <div ref={headerRef} className="text-center mb-16 opacity-0">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            {t.contact.title} <span className="text-gradient">{t.contact.title_highlight}</span>
-          </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full mb-6"></div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t.contact.subtitle}</p>
+        <div className="text-center mb-16">
+          <SplitTitle as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+            {`${t.contact.title} ${t.contact.title_highlight}`}
+          </SplitTitle>
+          <div ref={dividerRef} className="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full mb-6" />
+          <p ref={subtitleRef} className="text-lg text-muted-foreground max-w-2xl mx-auto opacity-0">{t.contact.subtitle}</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -123,7 +127,8 @@ const Contact = () => {
               <h3 className="text-2xl font-bold mb-8">{t.contact.info_title}</h3>
               <div className="space-y-6">
                 {socialLinks.map((link, index) => (
-                  <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 rounded-lg hover:bg-muted/50 transition-colors group">
+                  <a key={index} href={link.url} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-4 p-4 rounded-lg hover:bg-muted/50 transition-colors group">
                     <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-primary group-hover:border-primary group-hover:bg-primary/10 transition-all">
                       {link.icon}
                     </div>
@@ -136,7 +141,7 @@ const Contact = () => {
               </div>
               <div className="mt-8 p-4 rounded-lg bg-primary/5 border border-primary/20">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="h-2 w-2 rounded-full bg-primary animate-pulse"></div>
+                  <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
                   <span className="text-sm font-medium text-primary">{t.contact.availability}</span>
                 </div>
                 <p className="text-sm text-muted-foreground">{t.contact.response_time}</p>

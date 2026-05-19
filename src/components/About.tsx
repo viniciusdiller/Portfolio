@@ -4,16 +4,18 @@ import { Card } from "@/components/ui/card";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
+import SplitTitle from "./SplitTitle";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
   const { t, language } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const cardInfoRef = useRef<HTMLDivElement>(null);
   const skillsRef = useRef<HTMLDivElement>(null);
+  const dividerRef = useRef<HTMLDivElement>(null);
+  const isPt = language === "pt";
 
   const skills = [
     { icon: <Code2 className="h-8 w-8" />, title: t.about.skill_frontend, description: t.about.skill_frontend_desc },
@@ -24,47 +26,52 @@ const About = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Divider line draw
       gsap.fromTo(
-        titleRef.current,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.7, ease: "power3.out",
-          scrollTrigger: { trigger: titleRef.current, start: "top 85%" } }
+        dividerRef.current,
+        { scaleX: 0, transformOrigin: "left" },
+        { scaleX: 1, duration: 0.8, ease: "power3.out",
+          scrollTrigger: { trigger: dividerRef.current, start: "top 88%" } }
       );
+
+      // Text block — slide from left with clip
       gsap.fromTo(
         textRef.current,
-        { opacity: 0, x: -40 },
-        { opacity: 1, x: 0, duration: 0.7, ease: "power3.out",
+        { opacity: 0, clipPath: "inset(0 100% 0 0)", x: -20 },
+        { opacity: 1, clipPath: "inset(0 0% 0 0)", x: 0, duration: 0.85, ease: "power3.out",
           scrollTrigger: { trigger: textRef.current, start: "top 85%" } }
       );
+
+      // Info card
       gsap.fromTo(
         cardInfoRef.current,
-        { opacity: 0, x: 40 },
-        { opacity: 1, x: 0, duration: 0.7, ease: "power3.out",
+        { opacity: 0, y: 40, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.4)",
           scrollTrigger: { trigger: cardInfoRef.current, start: "top 85%" } }
       );
+
+      // Skills stagger with flip-in
       if (skillsRef.current) {
         gsap.fromTo(
           skillsRef.current.children,
-          { opacity: 0, y: 30, scale: 0.95 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out",
+          { opacity: 0, y: 50, rotateY: -30, transformOrigin: "left center" },
+          { opacity: 1, y: 0, rotateY: 0, duration: 0.6, ease: "back.out(1.3)",
             stagger: 0.12,
-            scrollTrigger: { trigger: skillsRef.current, start: "top 85%" } }
+            scrollTrigger: { trigger: skillsRef.current, start: "top 88%" } }
         );
       }
     }, sectionRef);
     return () => ctx.revert();
   }, []);
 
-  const isPt = language === "pt";
-
   return (
     <section id="about" ref={sectionRef} className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative">
       <div className="container mx-auto max-w-6xl">
-        <div ref={titleRef} className="text-center mb-16 opacity-0">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            {t.about.title} <span className="text-gradient">{t.about.title_highlight}</span>
-          </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
+        <div className="text-center mb-16">
+          <SplitTitle as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4" >
+            {`${t.about.title} ${t.about.title_highlight}`}
+          </SplitTitle>
+          <div ref={dividerRef} className="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full" style={{ transformOrigin: "left" }} />
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
@@ -85,10 +92,8 @@ const About = () => {
           <div ref={cardInfoRef} className="relative opacity-0">
             <div className="card-glass rounded-2xl p-8 border border-primary/20">
               <div className="flex items-center gap-3 mb-6">
-                <div className="h-3 w-3 rounded-full bg-primary animate-pulse"></div>
-                <span className="text-sm text-muted-foreground font-mono">
-                  Status: {t.contact.availability}
-                </span>
+                <div className="h-3 w-3 rounded-full bg-primary animate-pulse" />
+                <span className="text-sm text-muted-foreground font-mono">Status: {t.contact.availability}</span>
               </div>
               <div className="space-y-4">
                 <div>
@@ -113,8 +118,9 @@ const About = () => {
             <Card
               key={index}
               className="card-glass p-6 hover:border-primary/50 transition-all duration-300 hover:scale-105 group opacity-0"
+              style={{ perspective: 600 }}
             >
-              <div className="text-primary mb-4 group-hover:scale-110 transition-transform">
+              <div className="text-primary mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300">
                 {skill.icon}
               </div>
               <h3 className="text-xl font-semibold mb-2">{skill.title}</h3>
