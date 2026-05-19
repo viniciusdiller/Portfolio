@@ -21,84 +21,85 @@ gsap.registerPlugin(ScrollTrigger);
 const sharedGovTechStack = ["React", "TypeScript", "Node.js", "PostgreSQL", "Tailwind CSS"];
 
 const Projects = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const destaqueRef = useRef<HTMLDivElement>(null);
   const normalGridRef = useRef<HTMLDivElement>(null);
+  const isPt = language === "pt";
 
   const projects = [
     {
       title: "MEIdeSaquá",
-      description: t.language === "pt"
+      description: isPt
         ? 'Sistema de gestão e cadastro para Microempreendedores Individuais (MEI) de Saquarema. Plataforma que facilita o registro, acompanhamento e suporte aos MEIs locais. Ganhou 1° lugar do Prêmio PSPE "Sala do Empreendedor" em 2026.'
-        : 'Management and registration system for Individual Micro-entrepreneurs (MEI) in Saquarema. Platform that facilitates registration, tracking, and support for local MEIs. Won 1st place at the PSPE Award "Sala do Empreendedor" in 2026.',
+        : 'Management and registration system for Individual Micro-entrepreneurs (MEI) in Saquarema. Won 1st place at the PSPE Award "Sala do Empreendedor" in 2026.',
       image: meiDeSaqua, technologies: sharedGovTechStack,
       liveUrl: "https://meidesaqua.saquarema.rj.gov.br", destaque: true,
       contribuitor: "viniciusvalledev", award: "1° lugar • Prêmio PSPE 2026",
     },
     {
       title: "AquiTemODS",
-      description: t.language === "pt"
-        ? 'Plataforma digital para a Prefeitura de Saquarema focada nos Objetivos de Desenvolvimento Sustentável. Sistema completo de gestão e transparência de ações municipais alinhadas aos ODS da ONU. Ganhou 2° lugar na categoria "Gestão Inovadora".'
-        : 'Digital platform for the Saquarema City Hall focused on the Sustainable Development Goals. Complete management and transparency system for municipal actions aligned with UN SDGs. Won 2nd place in the "Innovative Management" category.',
+      description: isPt
+        ? 'Plataforma digital para a Prefeitura de Saquarema focada nos Objetivos de Desenvolvimento Sustentável. Ganhou 2° lugar na categoria "Gestão Inovadora".'
+        : 'Digital platform for the Saquarema City Hall focused on SDGs. Won 2nd place in the "Innovative Management" category.',
       image: aquiTemOds, technologies: sharedGovTechStack,
       liveUrl: "https://aquitemods.saquarema.rj.gov.br", destaque: true,
       contribuitor: "viniciusvalledev", award: "2° lugar • Gestão Inovadora",
     },
     {
       title: "Rodízio Race",
-      description: t.language === "pt"
-        ? "Uma plataforma projetada para gamificar encontros sociais em rodízios. O site permite a criação de salas privadas, escolha de avatares personalizados, um ranking ao vivo e um feed de fotos para validação dos pontos!"
-        : "A platform designed to gamify social gatherings at all-you-can-eat restaurants. It enables private room creation, custom avatars, a live ranking, and a photo feed for point validation!",
+      description: isPt
+        ? "Uma plataforma projetada para gamificar encontros sociais em rodízios. Criação de salas privadas, avatares personalizados, ranking ao vivo e feed de fotos."
+        : "A platform designed to gamify social gatherings at all-you-can-eat restaurants. Private rooms, custom avatars, live ranking and photo feed.",
       image: RodizioRace, technologies: ["TypeScript", "Supabase", "API", "Translate"],
       liveUrl: "https://rodiziorace.mechama.eu/", destaque: false, contribuitor: "ramorimdias",
     },
     {
       title: "Rafael Rodrigues Imóveis",
-      description: t.language === "pt"
-        ? "Site imobiliário com painel administrativo exclusivo para o corretor, que possui controle total sobre as informações exibidas no site: cadastro e edição de imóveis, gerênciãmento de fotos, valores e detalhes de cada listagem, tudo sem depender de terceiros."
-        : "Real estate website with an exclusive admin panel for the broker, giving full control over the site's displayed information: property registration, editing, photo management, pricing, and listing details — all without depending on third parties.",
+      description: isPt
+        ? "Site imobiliário com painel administrativo exclusivo para o corretor, com controle total sobre as informações exibidas."
+        : "Real estate website with an exclusive admin panel for the broker, with full control over displayed information.",
       image: RafaelROdrigues, technologies: sharedGovTechStack,
       liveUrl: "https://rafaelrodriguesimoveis.com.br/", destaque: false, contribuitor: "viniciusvalledev",
     },
     {
       title: "APG Empresa",
-      description: t.language === "pt"
-        ? "Site institucional com área administrativa completa: sistema de posts com criação, edição e categorização de conteúdo, moderação de comentários e gestão de usuários."
-        : "Institutional website with a full admin area: post system with content creation, editing and categorization, comment moderation, and user management.",
+      description: isPt
+        ? "Site institucional com área administrativa completa: sistema de posts, moderação de comentários e gestão de usuários."
+        : "Institutional website with a full admin area: post system, comment moderation, and user management.",
       image: APGEmpresa, technologies: sharedGovTechStack,
       liveUrl: "https://apgempresa.com/", destaque: false, contribuitor: "SouzaDioggo, arthurfrattani7",
     },
     {
       title: "Rancho AFG",
-      description: t.language === "pt"
+      description: isPt
         ? "Sistema de gestão para o Rancho AFG, facilitando o controle de aulas e comunicação com os membros."
         : "Management system for Rancho AFG, facilitating class control and member communication.",
       image: RanchoAFG, technologies: ["React", "TypeScript", "Node.js", "Supabase"],
       liveUrl: "https://rancho-afg.vercel.app/", destaque: false,
     },
     {
-      title: t.language === "pt" ? "Analisador de E-mails com IA" : "AI Email Analyzer",
-      description: t.language === "pt"
-        ? "Ferramenta que utiliza inteligência artificial para analisar e categorizar e-mails automaticamente, melhorando a produtividade e organização da caixa de entrada."
-        : "Tool that uses artificial intelligence to automatically analyze and categorize emails, improving inbox productivity and organization.",
+      title: isPt ? "Analisador de E-mails com IA" : "AI Email Analyzer",
+      description: isPt
+        ? "Ferramenta que utiliza inteligência artificial para analisar e categorizar e-mails automaticamente."
+        : "Tool that uses artificial intelligence to automatically analyze and categorize emails.",
       image: AnaliseEmail, technologies: ["JS", "Python", "HTML", "CSS"],
       liveUrl: "https://autou-five.vercel.app/", destaque: false,
     },
     {
-      title: t.language === "pt" ? "Busca de Atletas Olímpicos 2024" : "2024 Olympic Athletes Search",
-      description: t.language === "pt"
-        ? "Aplicação web que permite buscar informações detalhadas sobre atletas das Olimpíadas de 2024."
-        : "Web application that allows searching for detailed information about athletes from the 2024 Olympics.",
+      title: isPt ? "Busca de Atletas Olímpicos 2024" : "2024 Olympic Athletes Search",
+      description: isPt
+        ? "Aplicação web para buscar informações sobre atletas das Olimpíadas de 2024."
+        : "Web app to search for information about athletes from the 2024 Olympics.",
       image: Olimpiada, technologies: ["JS", "HTML", "CSS"],
       liveUrl: "https://olimpiadas-ashen-pi.vercel.app/", destaque: false,
     },
     {
-      title: t.language === "pt" ? "Site de Semi Joias" : "Semi-Jewelry Store",
-      description: t.language === "pt"
-        ? "Site de venda para uma marca de semi joias, apresentando produtos e opções de contato para clientes interessados."
-        : "Sales website for a semi-jewelry brand, showcasing products and contact options for interested customers.",
+      title: isPt ? "Site de Semi Joias" : "Semi-Jewelry Store",
+      description: isPt
+        ? "Site de venda para uma marca de semi joias, com produtos e opções de contato."
+        : "Sales website for a semi-jewelry brand, showcasing products and contact options.",
       image: SiteSemiJoia, technologies: ["JS", "HTML", "CSS"],
       liveUrl: "https://site-semi-joias.vercel.app/", destaque: false,
     },

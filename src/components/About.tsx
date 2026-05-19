@@ -8,7 +8,7 @@ import { useLanguage } from "@/context/LanguageContext";
 gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -55,6 +55,8 @@ const About = () => {
     return () => ctx.revert();
   }, []);
 
+  const isPt = language === "pt";
+
   return (
     <section id="about" ref={sectionRef} className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative">
       <div className="container mx-auto max-w-6xl">
@@ -74,7 +76,7 @@ const About = () => {
             </p>
             <p className="text-lg text-muted-foreground leading-relaxed">{t.about.p2}</p>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              {t.language === "pt"
+              {isPt
                 ? "Atualmente, trabalho com as mais recentes tecnologias do mercado, criando soluções que conectam pessoas e simplificam processos."
                 : "I work with the latest market technologies, building solutions that connect people and simplify processes."}
             </p>
@@ -90,22 +92,16 @@ const About = () => {
               </div>
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Localização</p>
+                  <p className="text-sm text-muted-foreground mb-1">{isPt ? "Localização" : "Location"}</p>
                   <p className="text-foreground font-semibold">Saquarema, RJ - Brasil</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">
-                    {t.language === "pt" ? "Foco atual" : "Current focus"}
-                  </p>
+                  <p className="text-sm text-muted-foreground mb-1">{isPt ? "Foco atual" : "Current focus"}</p>
                   <p className="text-foreground font-semibold">Soluções Gov Tech &amp; Web Apps</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">
-                    {t.language === "pt" ? "Experiência" : "Experience"}
-                  </p>
-                  <p className="text-foreground font-semibold">
-                    {t.language === "pt" ? "Projetos em produção" : "Projects in production"}
-                  </p>
+                  <p className="text-sm text-muted-foreground mb-1">{isPt ? "Experiência" : "Experience"}</p>
+                  <p className="text-foreground font-semibold">{isPt ? "Projetos em produção" : "Projects in production"}</p>
                 </div>
               </div>
             </div>
