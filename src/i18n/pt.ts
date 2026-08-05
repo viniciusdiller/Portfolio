@@ -37,6 +37,7 @@ export const pt = {
     others_title: "Outros",
     others_highlight: "Projetos",
     view: "Ver Projeto",
+    repository: "Repositório",
     collaboration: "Colaboração",
     featured_badge: "destaque",
   },

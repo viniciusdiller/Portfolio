@@ -1,33 +1,15 @@
 import { useEffect, useRef } from "react";
-import { ExternalLink, Code2 } from "lucide-react";
+import { ExternalLink, Code2, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
+import { getProjects } from "@/lib/Projects";
 import SplitTitle from "./SplitTitle";
-import aquiTemOds from "@/assets/AquiTemODS.png";
-import meiDeSaqua from "@/assets/MEIdeSaqua.png";
-import Apaixonese from "@/assets/Apaixonese.png";
-import RafaelROdrigues from "@/assets/RafaelRodrigues.png";
-import VivaMar from "@/assets/VivaMar.png";
-import RodizioRace from "@/assets/RodizioRace.png";
-import RanchoAFG from "@/assets/RanchoAfg.png";
-import AnaliseEmail from "@/assets/AnaliseEmail.png";
-import Olimpiada from "@/assets/Olimpiada.png";
-import SiteSemiJoia from "@/assets/SiteSemiJoia.png";
-import APGEmpresa from "@/assets/APGEmpresa.png";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const sharedGovTechStack = [
-  "React",
-  "TypeScript",
-  "Node.js",
-  "PostgreSQL",
-  "Tailwind CSS",
-];
 
 const Projects = () => {
   const { t, language } = useLanguage();
@@ -38,129 +20,7 @@ const Projects = () => {
   const normalGridRef = useRef<HTMLDivElement>(null);
   const isPt = language === "pt";
 
-  const projects = [
-    {
-      title: "MEIdeSaquá",
-      description: isPt
-        ? 'Sistema de gestão e cadastro para MEIs de Saquarema. Ganhou 1° lugar do Prêmio PSPE "Sala do Empreendedor" em 2026.'
-        : 'Management system for MEIs in Saquarema. Won 1st place at PSPE Award "Sala do Empreendedor" in 2026.',
-      image: meiDeSaqua,
-      technologies: sharedGovTechStack,
-      liveUrl: "https://meidesaqua.saquarema.rj.gov.br",
-      destaque: true,
-      contribuitor: "viniciusvalledev",
-      award: "1° lugar • Prêmio PSPE 2026",
-    },
-    {
-      title: "AquiTemODS",
-      description: isPt
-        ? 'Plataforma digital para a Prefeitura de Saquarema focada nos ODS da ONU. Ganhou 2° lugar na categoria "Gestão Inovadora".'
-        : 'Digital platform for Saquarema City Hall focused on UN SDGs. Won 2nd place in "Innovative Management" category.',
-      image: aquiTemOds,
-      technologies: sharedGovTechStack,
-      liveUrl: "https://aquitemods.saquarema.rj.gov.br",
-      destaque: true,
-      contribuitor: "viniciusvalledev",
-      award: "2° lugar • Gestão Inovadora",
-    },
-    {
-      title: "Apaixonese",
-      description: isPt
-        ? "Plataforma voltada para a Secretaria de Turismo. Onde os turistas podem ver estabelecimentos parceiros do Cadastur."
-        : "A platform for the Tourism Secretariat that allows tourists to view Cadastur-registered partner establishments.",
-      image: Apaixonese,
-      technologies: ["React", "NestJS", "MySQL", "API", "Jest"],
-      liveUrl: "https://apaixonese.saquarema.rj.gov.br/",
-      destaque: false,
-      contribuitor: "viniciusvalledev",
-    },
-    {
-      title: "Rafael Rodrigues Imóveis",
-      description: isPt
-        ? "Site imobiliário com painel admin exclusivo para o corretor."
-        : "Real estate website with exclusive admin panel for the broker.",
-      image: RafaelROdrigues,
-      technologies: sharedGovTechStack,
-      liveUrl: "https://rafaelrodriguesimoveis.com/",
-      destaque: false,
-      contribuitor: "viniciusvalledev",
-    },
-    {
-      title: "VivaMar",
-      description: isPt
-        ? "Site da pousada VivaMar com área administrativa para gestão de reservas, quartos e informações aos hóspedes."
-        : "VivaMar guesthouse website featuring an admin area to manage bookings, rooms, and guest information.",
-      image: VivaMar,
-      technologies: ["React", "Next.js", "API"],
-      liveUrl: "https://vivamarpousada.com/",
-      destaque: false,
-      contribuitor: "viniciusvalledev",
-    },
-    {
-      title: "Rodízio Race",
-      description: isPt
-        ? "Plataforma gamificada para encontros sociais em rodízios. Salas privadas, avatares, ranking ao vivo e feed de fotos."
-        : "Gamified platform for all-you-can-eat restaurant gatherings. Private rooms, avatars, live ranking and photo feed.",
-      image: RodizioRace,
-      technologies: ["TypeScript", "Supabase", "API"],
-      liveUrl: "https://rodiziorace.mechama.eu/",
-      destaque: false,
-      contribuitor: "ramorimdias",
-    },
-    {
-      title: "APG Empresa",
-      description: isPt
-        ? "Site institucional com área admin: posts, moderação de comentários e gestão de usuários."
-        : "Institutional site with admin area: posts, comment moderation, user management.",
-      image: APGEmpresa,
-      technologies: sharedGovTechStack,
-      liveUrl: "https://apgempresa.com/",
-      destaque: false,
-      contribuitor: "SouzaDioggo, arthurfrattani7",
-    },
-    {
-      title: "Rancho AFG",
-      description: isPt
-        ? "Sistema de gestão para o Rancho AFG."
-        : "Management system for Rancho AFG.",
-      image: RanchoAFG,
-      technologies: ["React", "TypeScript", "Node.js", "Supabase"],
-      liveUrl: "https://rancho-afg.vercel.app/",
-      destaque: false,
-    },
-    {
-      title: isPt ? "Analisador de E-mails com IA" : "AI Email Analyzer",
-      description: isPt
-        ? "Ferramenta de IA para analisar e categorizar e-mails automaticamente."
-        : "AI tool to automatically analyze and categorize emails.",
-      image: AnaliseEmail,
-      technologies: ["JS", "Python", "HTML", "CSS"],
-      liveUrl: "https://autou-five.vercel.app/",
-      destaque: false,
-    },
-    {
-      title: isPt
-        ? "Busca de Atletas Olímpicos 2024"
-        : "2024 Olympic Athletes Search",
-      description: isPt
-        ? "App para buscar informações sobre atletas das Olimpíadas 2024."
-        : "App to search info about 2024 Olympics athletes.",
-      image: Olimpiada,
-      technologies: ["JS", "HTML", "CSS"],
-      liveUrl: "https://olimpiadas-ashen-pi.vercel.app/",
-      destaque: false,
-    },
-    {
-      title: isPt ? "Site de Semi Joias" : "Semi-Jewelry Store",
-      description: isPt
-        ? "Site de venda para marca de semi joias."
-        : "Sales website for a semi-jewelry brand.",
-      image: SiteSemiJoia,
-      technologies: ["JS", "HTML", "CSS"],
-      liveUrl: "https://site-semi-joias.vercel.app/",
-      destaque: false,
-    },
-  ];
+  const projects = getProjects(isPt);
 
   const destaqueProjects = projects.filter((p) => p.destaque);
   const normalProjects = projects.filter((p) => !p.destaque);
@@ -305,20 +165,34 @@ const Projects = () => {
                     </div>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mt-auto">
-                    <Button
-                      asChild
-                      size="lg"
-                      className="bg-primary hover:bg-primary/90 shadow-lg hover:shadow-neon transition-all w-full sm:w-auto"
-                    >
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <div className="flex w-full sm:w-auto gap-3">
+                      <Button
+                        asChild
+                        size="lg"
+                        className="bg-primary hover:bg-primary/90 shadow-lg hover:shadow-neon transition-all w-full sm:w-auto"
                       >
-                        <ExternalLink className="mr-2 h-4 w-4" />
-                        {t.projects.view}
-                      </a>
-                    </Button>
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="mr-2 h-4 w-4" />
+                          {t.projects.view}
+                        </a>
+                      </Button>
+                      {project.repositoryUrl && (
+                        <Button asChild size="lg" variant="outline">
+                          <a
+                            href={project.repositoryUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Github className="mr-2 h-4 w-4" />
+                            {t.projects.repository}
+                          </a>
+                        </Button>
+                      )}
+                    </div>
                     {project.contribuitor && (
                       <span className="text-muted-foreground text-sm">
                         {t.projects.collaboration}:{" "}
@@ -388,29 +262,48 @@ const Projects = () => {
                     </Badge>
                   ))}
                 </div>
-                <div className="flex items-center justify-between">
-                  <Button
-                    asChild
-                    variant="ghost"
-                    size="sm"
-                    className="text-primary hover:text-primary hover:bg-primary/10 p-0 h-auto"
-                  >
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="sm"
+                      className="text-primary hover:text-primary hover:bg-primary/10 p-0 h-auto"
                     >
-                      <ExternalLink className="mr-1 h-4 w-4" />
-                      {t.projects.view}
-                    </a>
-                  </Button>
-                  {project.contribuitor && (
-                    <span className="text-xs text-muted-foreground">
-                      <Code2 className="inline h-3 w-3 mr-1" />
-                      {project.contribuitor}
-                    </span>
-                  )}
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink className="mr-1 h-4 w-4" />
+                        {t.projects.view}
+                      </a>
+                    </Button>
+                    {project.repositoryUrl && (
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="sm"
+                        className="text-primary hover:text-primary hover:bg-primary/10 p-0 h-auto"
+                      >
+                        <a
+                          href={project.repositoryUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Github className="mr-1 h-4 w-4" />
+                          {t.projects.repository}
+                        </a>
+                      </Button>
+                    )}
+                  </div>
                 </div>
+                {project.contribuitor && (
+                  <span className="text-xs text-muted-foreground">
+                    <Code2 className="inline h-3 w-3 mr-1" />
+                    {project.contribuitor}
+                  </span>
+                )}
               </div>
             </Card>
           ))}

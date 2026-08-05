@@ -37,6 +37,7 @@ export const en = {
     others_title: "Other",
     others_highlight: "Projects",
     view: "View Project",
+    repository: "Repository",
     collaboration: "Collaboration",
     featured_badge: "featured",
   },
