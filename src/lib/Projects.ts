@@ -136,7 +136,7 @@ export const getProjects = (isPt: boolean): Project[] => [
       ? "Sistema de geração de QR Codes."
       : "QR Code generation system.",
     image: QR,
-    technologies: ["Python", "Excel", "Tkinter"],
+    technologies: ["Python", "Excel"],
     liveUrl: "https://github.com/viniciusdiller/Gerador-de-QR-Code",
     destaque: false,
     repositoryUrl: "https://github.com/viniciusdiller/Gerador-de-QR-Code",
