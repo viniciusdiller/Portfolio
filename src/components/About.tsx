@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
-import { Code2, Database, Globe, Zap } from "lucide-react";
+import { Code2, Database, ExternalLink, Globe, Zap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
 import SplitTitle from "./SplitTitle";
+import SpotlightCard from "./SpotlightCard";
+import TechMarquee from "./TechMarquee";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -87,6 +89,35 @@ const About = () => {
                 ? "Atualmente, trabalho com as mais recentes tecnologias do mercado, criando soluções que conectam pessoas e simplificam processos."
                 : "I work with the latest market technologies, building solutions that connect people and simplify processes."}
             </p>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              {isPt ? (
+                <>
+                  Também atuo como freelancer e estou construindo minha própria empresa, a{" "}
+                  <a
+                    href="https://totalsoftware.com.br/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary font-semibold hover:underline"
+                  >
+                    Total Software
+                  </a>
+                  .
+                </>
+              ) : (
+                <>
+                  I also work as a freelancer and I'm building my own company,{" "}
+                  <a
+                    href="https://totalsoftware.com.br/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary font-semibold hover:underline"
+                  >
+                    Total Software
+                  </a>
+                  .
+                </>
+              )}
+            </p>
           </div>
 
           <div ref={cardInfoRef} className="relative opacity-0">
@@ -108,6 +139,18 @@ const About = () => {
                   <p className="text-sm text-muted-foreground mb-1">{isPt ? "Experiência" : "Experience"}</p>
                   <p className="text-foreground font-semibold">{isPt ? "Projetos em produção" : "Projects in production"}</p>
                 </div>
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">{isPt ? "Empresa" : "Company"}</p>
+                  <a
+                    href="https://totalsoftware.com.br/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground font-semibold hover:text-primary transition-colors inline-flex items-center gap-1.5"
+                  >
+                    Total Software
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -115,18 +158,23 @@ const About = () => {
 
         <div ref={skillsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {skills.map((skill, index) => (
-            <Card
-              key={index}
-              className="card-glass p-6 hover:border-primary/50 transition-all duration-300 hover:scale-105 group opacity-0"
-              style={{ perspective: 600 }}
-            >
-              <div className="text-primary mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300">
-                {skill.icon}
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{skill.title}</h3>
-              <p className="text-sm text-muted-foreground">{skill.description}</p>
-            </Card>
+            <SpotlightCard key={index} className="rounded-xl opacity-0" spotlightColor="189 100% 50%">
+              <Card
+                className="card-glass h-full p-6 hover:border-primary/50 transition-all duration-300 hover:scale-105 group"
+                style={{ perspective: 600 }}
+              >
+                <div className="text-primary mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300">
+                  {skill.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{skill.title}</h3>
+                <p className="text-sm text-muted-foreground">{skill.description}</p>
+              </Card>
+            </SpotlightCard>
           ))}
+        </div>
+
+        <div className="mt-16 border-t border-border/50 pt-10">
+          <TechMarquee />
         </div>
       </div>
     </section>

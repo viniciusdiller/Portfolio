@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Heart, Code2 } from "lucide-react";
+import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
@@ -34,7 +35,13 @@ const Footer = () => {
           </button>
           <p className="text-sm text-muted-foreground flex items-center gap-1.5">
             {t.footer.made_with}
-            <Heart className="h-4 w-4 text-primary fill-primary" />
+            <motion.span
+              animate={{ scale: [1, 1.25, 1] }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+              className="inline-flex"
+            >
+              <Heart className="h-4 w-4 text-primary fill-primary" />
+            </motion.span>
             {t.footer.and}
             <Code2 className="h-4 w-4 text-primary" />
             {t.footer.by} Vinícius Diller

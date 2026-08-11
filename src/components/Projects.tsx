@@ -14,6 +14,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
 import { getProjects } from "@/lib/Projects";
 import SplitTitle from "./SplitTitle";
+import SpotlightCard from "./SpotlightCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -167,9 +168,9 @@ const Projects = () => {
 
         <div ref={destaqueRef} className="space-y-12 mb-20">
           {destaqueProjects.map((project, index) => (
+            <SpotlightCard key={`destaque-${index}`} className="rounded-xl opacity-0">
             <Card
-              key={`destaque-${index}`}
-              className="overflow-hidden card-glass border-primary/20 hover:border-primary/50 transition-all duration-300 group shadow-lg opacity-0"
+              className="overflow-hidden card-glass border-primary/20 hover:border-primary/50 transition-all duration-300 group shadow-lg"
             >
               <div className="grid lg:grid-cols-2 gap-0">
                 <div className="relative overflow-hidden h-64 lg:h-auto min-h-[300px]">
@@ -262,6 +263,7 @@ const Projects = () => {
                 </div>
               </div>
             </Card>
+            </SpotlightCard>
           ))}
         </div>
 
@@ -286,9 +288,9 @@ const Projects = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {pageProjects.map((project, index) => (
+            <SpotlightCard key={`normal-${index}`} className="rounded-xl opacity-0">
             <Card
-              key={`normal-${index}`}
-              className="overflow-hidden card-glass hover:border-primary/50 transition-all duration-300 group hover:scale-[1.03] opacity-0"
+              className="overflow-hidden card-glass hover:border-primary/50 transition-all duration-300 group hover:scale-[1.03]"
             >
               <div className="relative h-48 overflow-hidden">
                 <a
@@ -366,6 +368,7 @@ const Projects = () => {
                 )}
               </div>
             </Card>
+            </SpotlightCard>
           ))}
         </div>
         {totalPages > 1 && (

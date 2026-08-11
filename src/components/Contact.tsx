@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Mail, Github, Linkedin, Send } from "lucide-react";
+import { Mail, Github, Linkedin, Send, Check } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,6 +11,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
 import SplitTitle from "./SplitTitle";
+import MagneticButton from "./MagneticButton";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,6 +25,7 @@ const Contact = () => {
   const formCardRef = useRef<HTMLDivElement>(null);
   const infoCardRef = useRef<HTMLDivElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
 
   useEffect(() => {
@@ -69,6 +72,8 @@ const Contact = () => {
       toast({ title: t.contact.success, description: t.contact.response_time });
       setFormData({ name: "", email: "", message: "" });
       form.current?.reset();
+      setIsSuccess(true);
+      setTimeout(() => setIsSuccess(false), 2200);
     } catch (error) {
       console.error("Erro ao enviar email:", error);
       toast({ variant: "destructive", title: t.contact.error });
@@ -114,10 +119,42 @@ const Contact = () => {
                   <label htmlFor="message" className="block text-sm font-medium mb-2">{t.contact.message_label}</label>
                   <Textarea id="message" name="message" value={formData.message} onChange={handleChange} placeholder={t.contact.message_placeholder} rows={6} required className="bg-background/50 border-border focus:border-primary resize-none" disabled={isSubmitting} />
                 </div>
-                <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold group shadow-lg hover:shadow-neon transition-all" disabled={isSubmitting}>
-                  <Send className="mr-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  {isSubmitting ? t.contact.sending : t.contact.send}
-                </Button>
+                <MagneticButton className="block w-full" strength={0.15}>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold group shadow-lg hover:shadow-neon transition-all overflow-hidden"
+                    disabled={isSubmitting}
+                  >
+                    <AnimatePresence mode="wait" initial={false}>
+                      {isSuccess ? (
+                        <motion.span
+                          key="success"
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.25 }}
+                          className="flex items-center justify-center"
+                        >
+                          <Check className="mr-2 h-5 w-5" />
+                          {t.contact.success}
+                        </motion.span>
+                      ) : (
+                        <motion.span
+                          key="idle"
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.25 }}
+                          className="flex items-center justify-center"
+                        >
+                          <Send className="mr-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                          {isSubmitting ? t.contact.sending : t.contact.send}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </Button>
+                </MagneticButton>
               </form>
             </Card>
           </div>
@@ -127,16 +164,23 @@ const Contact = () => {
               <h3 className="text-2xl font-bold mb-8">{t.contact.info_title}</h3>
               <div className="space-y-6">
                 {socialLinks.map((link, index) => (
-                  <a key={index} href={link.url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-4 rounded-lg hover:bg-muted/50 transition-colors group">
-                    <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-primary group-hover:border-primary group-hover:bg-primary/10 transition-all">
+                  <motion.a
+                    key={index}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ x: 6 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="flex items-center gap-4 p-4 rounded-lg hover:bg-muted/50 transition-colors group"
+                  >
+                    <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-primary group-hover:border-primary group-hover:bg-primary/10 group-hover:scale-110 transition-all">
                       {link.icon}
                     </div>
                     <div>
                       <p className="font-semibold">{link.label}</p>
                       <p className="text-sm text-muted-foreground">{link.username}</p>
                     </div>
-                  </a>
+                  </motion.a>
                 ))}
               </div>
               <div className="mt-8 p-4 rounded-lg bg-primary/5 border border-primary/20">

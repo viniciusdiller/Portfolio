@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
-import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowRight, ChevronDown, Github, Linkedin, Mail } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Eu from "@/assets/Eu.jpg";
 import gsap from "gsap";
 import { useLanguage } from "@/context/LanguageContext";
 import ParticleCanvas from "./ParticleCanvas";
+import MagneticButton from "./MagneticButton";
 
 const ROLES_PT = ["Full-Stack Developer", "React Specialist", "TypeScript Engineer", "Gov Tech Builder"];
 const ROLES_EN = ["Full-Stack Developer", "React Specialist", "TypeScript Engineer", "Gov Tech Builder"];
@@ -202,22 +204,26 @@ const Hero = () => {
               </p>
 
               <div ref={btnsRef} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start opacity-0">
-                <Button
-                  onClick={() => scrollToSection("projects")}
-                  size="lg"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold group shadow-lg hover:shadow-neon transition-all magnetic"
-                >
-                  {t.hero.cta_projects}
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button
-                  onClick={() => scrollToSection("contact")}
-                  variant="outline"
-                  size="lg"
-                  className="border-primary text-primary hover:bg-primary hover:text-black font-semibold magnetic"
-                >
-                  {t.hero.cta_contact}
-                </Button>
+                <MagneticButton>
+                  <Button
+                    onClick={() => scrollToSection("projects")}
+                    size="lg"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold group shadow-lg hover:shadow-neon transition-all magnetic"
+                  >
+                    {t.hero.cta_projects}
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </MagneticButton>
+                <MagneticButton>
+                  <Button
+                    onClick={() => scrollToSection("contact")}
+                    variant="outline"
+                    size="lg"
+                    className="border-primary text-primary hover:bg-primary hover:text-black font-semibold magnetic"
+                  >
+                    {t.hero.cta_contact}
+                  </Button>
+                </MagneticButton>
               </div>
 
               {/* Social Links */}
@@ -239,6 +245,23 @@ const Hero = () => {
           </div>
         </div>
       </div>
+
+      {/* Scroll cue */}
+      <motion.button
+        onClick={() => scrollToSection("about")}
+        aria-label={language === "pt" ? "Rolar para a seção sobre" : "Scroll to about section"}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.6, duration: 0.6 }}
+      >
+        <motion.span
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <ChevronDown className="h-6 w-6" />
+        </motion.span>
+      </motion.button>
     </section>
   );
 };
