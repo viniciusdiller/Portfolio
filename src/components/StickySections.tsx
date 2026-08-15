@@ -85,7 +85,7 @@ const StickySections = ({ children, className }: StickySectionsProps) => {
             ref={(el) => {
               panelRefs.current[i] = el;
             }}
-            className="absolute inset-0 h-full w-full overflow-y-auto"
+            className="absolute inset-0 h-full w-full overflow-y-auto bg-background"
           >
             {panel}
           </div>
