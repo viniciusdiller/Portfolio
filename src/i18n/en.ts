@@ -12,7 +12,7 @@ export const en = {
       "Building scalable and innovative web solutions focused on real impact. Specialized in crafting digital experiences that transform businesses.",
     cta_projects: "View Projects",
     cta_contact: "Get in Touch",
-    status_badge: "Open for opportunities in Rio de Janeiro & Remote",
+    status_badge: "Available for new projects",
     location: "Rio de Janeiro",
     tagline_start: "Full-stack code engineered for",
     tagline_highlight: "high load",

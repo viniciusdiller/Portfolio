@@ -12,7 +12,7 @@ export const pt = {
       "Construindo soluções web escaláveis e inovadoras com foco em impacto real. Especializado em criar experiências digitais que transformam negócios.",
     cta_projects: "Ver Projetos",
     cta_contact: "Entre em Contato",
-    status_badge: "Aberto a oportunidades no Rio de Janeiro e Remoto",
+    status_badge: "Disponível para novos projetos",
     location: "Rio de Janeiro",
     tagline_start: "Código full-stack que aguenta",
     tagline_highlight: "a carga",

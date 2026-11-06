@@ -17,44 +17,39 @@ const Hero = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Smooth mouse coordinates for 3D perspective parallax
+  // Smooth mouse coordinates for 3D perspective parallax (optimized for low-end laptops)
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const springConfig = { damping: 25, stiffness: 120 };
+  const springConfig = { damping: 30, stiffness: 90, mass: 0.5 };
   const smoothMouseX = useSpring(mouseX, springConfig);
   const smoothMouseY = useSpring(mouseY, springConfig);
 
   // Parallax offsets for different layers
-  // Background text: subtle opposite movement
-  const textX = useTransform(smoothMouseX, [-0.5, 0.5], [18, -18]);
-  const textY = useTransform(smoothMouseY, [-0.5, 0.5], [14, -14]);
+  const textX = useTransform(smoothMouseX, [-0.5, 0.5], [16, -16]);
+  const textY = useTransform(smoothMouseY, [-0.5, 0.5], [12, -12]);
 
-  // Central character: 3D perspective tilt
-  const charRotateX = useTransform(smoothMouseY, [-0.5, 0.5], [8, -8]);
-  const charRotateY = useTransform(smoothMouseX, [-0.5, 0.5], [-10, 10]);
-  const charX = useTransform(smoothMouseX, [-0.5, 0.5], [-12, 12]);
-  const charY = useTransform(smoothMouseY, [-0.5, 0.5], [-10, 10]);
+  const charRotateX = useTransform(smoothMouseY, [-0.5, 0.5], [7, -7]);
+  const charRotateY = useTransform(smoothMouseX, [-0.5, 0.5], [-8, 8]);
+  const charX = useTransform(smoothMouseX, [-0.5, 0.5], [-10, 10]);
+  const charY = useTransform(smoothMouseY, [-0.5, 0.5], [-8, 8]);
 
-  // Floating side cards: independent perspective depth
-  const leftCardsX = useTransform(smoothMouseX, [-0.5, 0.5], [-16, 16]);
-  const leftCardsY = useTransform(smoothMouseY, [-0.5, 0.5], [-12, 12]);
-  const rightCardsX = useTransform(smoothMouseX, [-0.5, 0.5], [-20, 20]);
-  const rightCardsY = useTransform(smoothMouseY, [-0.5, 0.5], [-14, 14]);
+  const leftCardsX = useTransform(smoothMouseX, [-0.5, 0.5], [-14, 14]);
+  const leftCardsY = useTransform(smoothMouseY, [-0.5, 0.5], [-10, 10]);
+  const rightCardsX = useTransform(smoothMouseX, [-0.5, 0.5], [-16, 16]);
+  const rightCardsY = useTransform(smoothMouseY, [-0.5, 0.5], [-12, 12]);
 
-  // Glow bloom center tracking
-  const bloomX = useTransform(smoothMouseX, [-0.5, 0.5], [-25, 25]);
-  const bloomY = useTransform(smoothMouseY, [-0.5, 0.5], [-20, 20]);
+  const bloomX = useTransform(smoothMouseX, [-0.5, 0.5], [-20, 20]);
+  const bloomY = useTransform(smoothMouseY, [-0.5, 0.5], [-16, 16]);
 
   useEffect(() => {
     const updateRioTime = () => {
       try {
-        const now = new Date();
         const timeStr = new Intl.DateTimeFormat("pt-BR", {
           timeZone: "America/Sao_Paulo",
           hour: "2-digit",
           minute: "2-digit",
-        }).format(now);
+        }).format(new Date());
         setCurrentTime(timeStr);
       } catch {
         setCurrentTime("11:00");
@@ -65,16 +60,22 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const rafId = useRef<number | null>(null);
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
-    const { innerWidth, innerHeight } = window;
-    const x = e.clientX / innerWidth - 0.5;
-    const y = e.clientY / innerHeight - 0.5;
-    mouseX.set(x);
-    mouseY.set(y);
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+    if (rafId.current) cancelAnimationFrame(rafId.current);
+    rafId.current = requestAnimationFrame(() => {
+      const { innerWidth, innerHeight } = window;
+      mouseX.set(clientX / innerWidth - 0.5);
+      mouseY.set(clientY / innerHeight - 0.5);
+    });
   };
 
   const handleMouseLeave = () => {
+    if (rafId.current) cancelAnimationFrame(rafId.current);
     mouseX.set(0);
     mouseY.set(0);
   };
