@@ -33,6 +33,9 @@ export type Project = {
   category: ProjectCategory;
   contribuitor?: string;
   award?: string;
+  scope?: string;
+  context?: string;
+  highlights?: string[];
 };
 
 export const getProjects = (isPt: boolean): Project[] => [
@@ -49,6 +52,21 @@ export const getProjects = (isPt: boolean): Project[] => [
     contribuitor: "viniciusvalledev",
     repositoryUrl: "https://github.com/viniciusdiller/MeideSaqua-Front",
     award: "1° lugar • Prêmio PSPE 2026",
+    scope: isPt ? "Desenvolvimento Full-Stack & Interface" : "Full-Stack Development & UI",
+    context: isPt
+      ? "Portal oficial desenvolvido para a Prefeitura de Saquarema para centralizar cadastro, emissão de guias e suporte a microempreendedores locais. Premiado em âmbito estadual."
+      : "Official portal built for Saquarema City Hall to centralize registrations, tax slips, and local business support.",
+    highlights: isPt
+      ? [
+          "1° lugar no Prêmio PSPE 2026 (Sala do Empreendedor)",
+          "Mais de 1.000 cadastros suportados em produção contínua",
+          "Painel administrativo com relatórios e filtros para a gestão pública",
+        ]
+      : [
+          "1st place at 2026 PSPE Award",
+          "Over 1,000 active registrations handled in production",
+          "Reporting dashboard with filters for municipal administration",
+        ],
   },
   {
     title: "AquiTemODS",
@@ -63,6 +81,21 @@ export const getProjects = (isPt: boolean): Project[] => [
     contribuitor: "viniciusvalledev",
     repositoryUrl: "https://github.com/viniciusdiller/AquiTemODS-Front",
     award: "2° lugar • Gestão Inovadora",
+    scope: isPt ? "Frontend & Integração com APIs Governamentais" : "Frontend & Gov API Integrations",
+    context: isPt
+      ? "Plataforma pública de monitoramento e transparência das iniciativas municipais alinhadas aos Objetivos de Desenvolvimento Sustentável da ONU."
+      : "Public dashboard tracking municipal initiatives aligned with the UN Sustainable Development Goals.",
+    highlights: isPt
+      ? [
+          "2° lugar na categoria Gestão Inovadora",
+          "Mapeamento visual e indicadores de impacto socioeconômico",
+          "Interface fluida com foco em acessibilidade e responsividade",
+        ]
+      : [
+          "2nd place in Innovative Management category",
+          "Visual impact indicators and interactive data mapping",
+          "Accessible, high-performance responsive interface",
+        ],
   },
   {
     title: "Apaixonese",
@@ -76,6 +109,21 @@ export const getProjects = (isPt: boolean): Project[] => [
     category: "govtech",
     contribuitor: "viniciusvalledev",
     repositoryUrl: "https://github.com/viniciusdiller/ApaixoneSe-Front",
+    scope: isPt ? "Arquitetura Backend & Frontend" : "Backend Architecture & Frontend",
+    context: isPt
+      ? "Guia turístico oficial da Secretaria de Turismo de Saquarema para consulta de rede hoteleira, restaurantes e atrativos cadastrados no Cadastur."
+      : "Saquarema Tourism Secretariat official guide mapping Cadastur-certified hotels, restaurants, and attractions.",
+    highlights: isPt
+      ? [
+          "Backend estruturado com NestJS e testes unitários em Jest",
+          "Modelagem de dados relacional em MySQL",
+          "Filtros rápidos por categoria e localização",
+        ]
+      : [
+          "Modular NestJS backend with Jest unit test coverage",
+          "Relational MySQL schema design",
+          "Fast category and geographical filtering",
+        ],
   },
   {
     title: "Rafael Rodrigues Imóveis",
@@ -91,6 +139,21 @@ export const getProjects = (isPt: boolean): Project[] => [
     repositoryUrl:
       "https://github.com/viniciusvalledev/LandingPage-imobiliaria",
     isPrivateRepo: true,
+    scope: isPt ? "Desenvolvimento Full-Stack (Cliente)" : "Full-Stack Web (Private Client)",
+    context: isPt
+      ? "Portal comercial para corretora imobiliária com catálogo dinâmico de imóveis, busca com filtros avançados e painel restrito para administração."
+      : "Commercial real estate portal with property catalog, search filters, and private admin management dashboard.",
+    highlights: isPt
+      ? [
+          "Painel exclusivo para gerenciamento de imóveis e captações",
+          "Formulários de contato direto e captura de leads",
+          "Código privado sob termo de confidencialidade",
+        ]
+      : [
+          "Custom inventory and lead capture admin panel",
+          "Direct contact channels and lead management",
+          "Private repository under NDA",
+        ],
   },
   {
     title: "Pousada Pratagy",
@@ -104,6 +167,21 @@ export const getProjects = (isPt: boolean): Project[] => [
     category: "commercial",
     repositoryUrl: "https://github.com/viniciusdiller/Landing-Page-Pratagy",
     isPrivateRepo: true,
+    scope: isPt ? "Frontend & Otimização de Performance" : "Frontend & Web Performance",
+    context: isPt
+      ? "Website institucional para a Pousada Pratagy em Saquarema, desenvolvido com foco em velocidade, apresentação de acomodações e canais diretos de reserva."
+      : "Modern web platform for Pousada Pratagy in Saquarema featuring room presentations, local guides, and direct bookings.",
+    highlights: isPt
+      ? [
+          "Desenvolvido com React, Next.js e Tailwind CSS",
+          "Otimização de imagens e pontuação de carregamento ágil",
+          "Código privado sob termo comercial",
+        ]
+      : [
+          "Built with React, Next.js, TypeScript and Tailwind CSS",
+          "Optimized asset loading and high lighthouse performance",
+          "Private commercial repository",
+        ],
   },
   {
     title: "VivaMar",
@@ -117,6 +195,21 @@ export const getProjects = (isPt: boolean): Project[] => [
     category: "commercial",
     contribuitor: "viniciusvalledev",
     repositoryUrl: "https://github.com/viniciusdiller/Landing-Page-Viva-Mar",
+    scope: isPt ? "Full-Stack Web (Cliente)" : "Full-Stack Web (Private Client)",
+    context: isPt
+      ? "Website para a Pousada VivaMar com área administrativa integrada para controle de quartos, reservas e informações turísticas."
+      : "Guesthouse web platform featuring integrated admin controls for room availability and guest support.",
+    highlights: isPt
+      ? [
+          "Painel administrativo para gestão de quartos e tarifas",
+          "Design responsivo sob medida",
+          "Integração com APIs de atendimento",
+        ]
+      : [
+          "Dedicated admin panel for room management",
+          "Custom responsive UI",
+          "Integrated contact and messaging channels",
+        ],
   },
   {
     title: "Rodízio Race",
@@ -130,6 +223,21 @@ export const getProjects = (isPt: boolean): Project[] => [
     category: "systems",
     contribuitor: "ramorimdias",
     repositoryUrl: "https://github.com/viniciusdiller/Corrida-Rodizio",
+    scope: isPt ? "Full-Stack & Supabase Realtime" : "Full-Stack & Supabase Realtime",
+    context: isPt
+      ? "Aplicação social gamificada que conecta amigos em rodízios gastronômicos através de salas privadas, sincronização ao vivo e placares de consumo."
+      : "Gamified social app connecting dining groups with real-time rooms, scoreboards, and photo uploads.",
+    highlights: isPt
+      ? [
+          "Sincronização em tempo real via Supabase Realtime",
+          "Salas privadas com avatares e placar dinâmico",
+          "Feed de upload e exibição de fotos instantâneas",
+        ]
+      : [
+          "Real-time state synchronization via Supabase Realtime",
+          "Private room sessions with avatars and live rankings",
+          "Instant photo feed and shared gallery",
+        ],
   },
   {
     title: "APG Empresa",
@@ -143,6 +251,21 @@ export const getProjects = (isPt: boolean): Project[] => [
     category: "systems",
     contribuitor: "SouzaDioggo, arthurfrattani7",
     repositoryUrl: "https://github.com/SouzaDioggo/APG",
+    scope: isPt ? "Full-Stack & Sistema Administrativo" : "Full-Stack & CMS Portal",
+    context: isPt
+      ? "Portal institucional corporativo contendo CMS interno para redação de artigos, moderação de comentários e controle de perfis de usuário."
+      : "Corporate portal featuring internal CMS for content publication, comment moderation, and user management.",
+    highlights: isPt
+      ? [
+          "Sistema de gerenciamento de conteúdo (CMS) proprietário",
+          "Controle de permissões baseado em funções (RBAC)",
+          "Desenvolvido em equipe com versionamento colaborativo",
+        ]
+      : [
+          "Custom CMS publication engine",
+          "Role-based access control (RBAC)",
+          "Collaborative multi-contributor workflow",
+        ],
   },
   {
     title: "Site de Semi Joias",
@@ -154,6 +277,21 @@ export const getProjects = (isPt: boolean): Project[] => [
     liveUrl: "https://site-semi-joias.vercel.app/",
     destaque: false,
     category: "commercial",
+    scope: isPt ? "Frontend & Vitrine E-commerce" : "Frontend & E-commerce Showcase",
+    context: isPt
+      ? "Vitrine digital e e-commerce para marca de semi-joias, projetado com foco em apelo visual, carregamento instantâneo em conexões móveis e catálogo estruturado."
+      : "Mobile-first showcase and e-commerce portal for semi-jewelry brand with optimized catalog layout.",
+    highlights: isPt
+      ? [
+          "Catálogo visual focado em conversão e usabilidade mobile",
+          "Design limpo e tipografia editorial",
+          "Arquitetura modular de componentes",
+        ]
+      : [
+          "Mobile-first conversion layout",
+          "Clean editorial typography",
+          "Modular component architecture",
+        ],
   },
   {
     title: isPt ? "Analisador de E-mails com IA" : "AI Email Analyzer",
@@ -167,6 +305,21 @@ export const getProjects = (isPt: boolean): Project[] => [
     category: "systems",
     repositoryUrl:
       "https://github.com/viniciusdiller/Analisador-de-Emails-com-IA-integrada",
+    scope: isPt ? "Engenharia de Software & NLP" : "Software Engineering & NLP",
+    context: isPt
+      ? "Ferramenta de automação que processa e-mails recebidos, analisa o conteúdo textual e categoriza a demanda automaticamente para triagem operacional."
+      : "Operational automation tool processing incoming emails with NLP models to classify intents and route tickets.",
+    highlights: isPt
+      ? [
+          "Triagem automatizada com redução de tempo manual",
+          "Processamento de texto em lote com Python e JavaScript",
+          "Interface web direta para visualização dos resultados",
+        ]
+      : [
+          "Automated intent extraction and priority sorting",
+          "Batch text analysis pipeline with Python and JavaScript",
+          "Clean web UI for reviewing processed results",
+        ],
   },
   {
     title: "Gerador de QR Code",
@@ -179,6 +332,21 @@ export const getProjects = (isPt: boolean): Project[] => [
     destaque: false,
     category: "systems",
     repositoryUrl: "https://github.com/viniciusdiller/Gerador-de-QR-Code",
+    scope: isPt ? "Engenharia de Automação & Scripting" : "Automation Scripting & Utility",
+    context: isPt
+      ? "Utilitário desenvolvido para automação operacional de geração massiva de QR Codes a partir de tabelas de dados, agilizando rotinas de inventário e divulgação."
+      : "Batch QR code generation tool reading data tables and exporting high-resolution codes for operational pipelines.",
+    highlights: isPt
+      ? [
+          "Processamento automatizado de planilhas Excel em lote",
+          "Exportação em alta definição pronta para impressão",
+          "Script robusto em Python",
+        ]
+      : [
+          "Automated batch spreadsheet parsing",
+          "High-resolution print-ready exports",
+          "Robust Python processing core",
+        ],
   },
   {
     title: isPt
@@ -192,5 +360,20 @@ export const getProjects = (isPt: boolean): Project[] => [
     liveUrl: "https://olimpiadas-ashen-pi.vercel.app/",
     destaque: false,
     category: "systems",
+    scope: isPt ? "Frontend & Filtragem de Dados" : "Frontend & Data Querying",
+    context: isPt
+      ? "Aplicação de busca e visualização rápida com base nos atletas, modalidades e estatísticas das Olimpíadas de Paris 2024."
+      : "Interactive query application filtering athletes, sports, and stats from the 2024 Paris Olympic Games.",
+    highlights: isPt
+      ? [
+          "Busca instantânea e filtros por país e modalidade",
+          "Interface dinâmica e responsiva sem dependências pesadas",
+          "Construído com JavaScript moderno",
+        ]
+      : [
+          "Instant search and multi-facet filtering",
+          "Lightweight responsive interface",
+          "Modern vanilla JavaScript architecture",
+        ],
   },
 ];
