@@ -365,29 +365,36 @@ const Projects = () => {
         open={!!selectedProject}
         onOpenChange={(open) => !open && setSelectedProject(null)}
       >
-        <DialogContent className="max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-y-auto cyber-glass border border-white/15 p-0 bg-[#040711]/95 backdrop-blur-2xl text-foreground shadow-2xl rounded-2xl">
+        <DialogContent className="w-[94vw] sm:w-full max-w-2xl lg:max-w-3xl max-h-[85dvh] sm:max-h-[88vh] overflow-y-auto overflow-x-hidden cyber-scrollbar cyber-glass border border-white/15 p-0 gap-0 bg-[#040711]/95 backdrop-blur-2xl text-foreground shadow-2xl rounded-2xl">
           {selectedProject && (
-            <div>
+            <div className="w-full max-w-full overflow-x-hidden">
               {/* Window Header */}
-              <div className="flex items-center justify-between px-5 py-3 bg-black/60 border-b border-white/10 select-none">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-rose-500/80" />
-                  <span className="w-3 h-3 rounded-full bg-amber-500/80" />
-                  <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                  <span className="ml-2 font-mono text-xs text-muted-foreground/80">
+              <div className="flex items-center justify-between px-3.5 sm:px-5 py-2.5 sm:py-3 bg-black/60 border-b border-white/10 select-none pr-11 sm:pr-12">
+                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                  <div className="flex items-center gap-1 shrink-0">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                  </div>
+                  <span
+                    className="ml-1 sm:ml-2 font-mono text-[11px] sm:text-xs text-muted-foreground/80 truncate max-w-[110px] sm:max-w-[220px]"
+                    title={formatDisplayUrl(selectedProject.liveUrl)}
+                  >
                     {formatDisplayUrl(selectedProject.liveUrl)}
                   </span>
                 </div>
-                {selectedProject.award ? (
-                  <Badge className="bg-primary/20 text-primary border border-primary/30 text-xs font-semibold">
-                    {selectedProject.award}
-                  </Badge>
-                ) : (
-                  <Badge variant="outline" className="text-emerald-400 border-emerald-500/30 bg-emerald-950/30 text-xs">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse mr-1.5" />
-                    {t.projects.status_production}
-                  </Badge>
-                )}
+                <div className="shrink-0 flex items-center">
+                  {selectedProject.award ? (
+                    <Badge className="bg-primary/20 text-primary border border-primary/30 text-[10px] sm:text-xs font-semibold px-2 py-0.5 truncate max-w-[130px] sm:max-w-none">
+                      {selectedProject.award}
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-emerald-400 border-emerald-500/30 bg-emerald-950/30 text-[10px] sm:text-xs px-2 py-0.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse mr-1" />
+                      {t.projects.status_production}
+                    </Badge>
+                  )}
+                </div>
               </div>
 
               {/* Preview Image in Modal */}
@@ -397,30 +404,28 @@ const Projects = () => {
                   alt={selectedProject.title}
                   className="w-full h-full object-cover object-top"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#040711] via-transparent to-transparent opacity-80" />
-                <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between">
-                  <div>
-                    <DialogTitle className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-1">
-                      {selectedProject.title}
-                    </DialogTitle>
-                    {selectedProject.scope && (
-                      <span className="inline-block text-xs font-mono text-primary/90 bg-primary/10 border border-primary/20 px-2.5 py-0.5 rounded">
-                        {selectedProject.scope}
-                      </span>
-                    )}
-                  </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#040711] via-[#040711]/30 to-transparent opacity-90" />
+                <div className="absolute bottom-3 left-4 right-4 sm:bottom-4 sm:left-6 sm:right-6 flex flex-col items-start gap-1">
+                  <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-white drop-shadow-md break-words">
+                    {selectedProject.title}
+                  </DialogTitle>
+                  {selectedProject.scope && (
+                    <span className="inline-block text-[11px] sm:text-xs font-mono text-primary bg-primary/15 border border-primary/25 px-2 py-0.5 rounded break-words max-w-full">
+                      {selectedProject.scope}
+                    </span>
+                  )}
                 </div>
               </div>
 
               {/* Details Body */}
-              <div className="p-6 sm:p-8 space-y-6">
-                <DialogDescription className="text-base text-foreground/90 leading-relaxed">
+              <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 overflow-x-hidden max-w-full">
+                <DialogDescription className="text-xs sm:text-sm md:text-base text-foreground/90 leading-relaxed font-normal break-words">
                   {selectedProject.context || selectedProject.description}
                 </DialogDescription>
 
                 {/* Technical Highlights */}
                 {selectedProject.highlights && selectedProject.highlights.length > 0 && (
-                  <div className="space-y-3">
+                  <div className="space-y-2.5">
                     <h4 className="text-xs font-mono uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-primary" />
                       <span>{t.projects.modal_highlights_label}</span>
@@ -429,10 +434,12 @@ const Projects = () => {
                       {selectedProject.highlights.map((highlight, idx) => (
                         <div
                           key={idx}
-                          className="flex items-start gap-2.5 text-sm text-foreground/80 font-mono bg-white/[0.02] border border-white/5 rounded-lg p-2.5"
+                          className="flex items-start gap-2 text-xs sm:text-sm text-foreground/85 bg-white/[0.02] border border-white/5 rounded-lg p-2.5 sm:p-3"
                         >
-                          <ChevronRight className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                          <span>{highlight}</span>
+                          <ChevronRight className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+                          <span className="break-words leading-relaxed flex-1 min-w-0 font-sans">
+                            {highlight}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -440,15 +447,15 @@ const Projects = () => {
                 )}
 
                 {/* Tech Stack */}
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   <h4 className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
                     {t.projects.modal_stack_label}
                   </h4>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {selectedProject.technologies.map((tech) => (
                       <span
                         key={tech}
-                        className="inline-flex items-center px-3 py-1 rounded-md text-xs font-mono bg-white/[0.05] text-primary border border-primary/25"
+                        className="inline-flex items-center px-2.5 py-1 rounded text-xs font-mono bg-white/[0.04] text-primary border border-primary/20"
                       >
                         {tech}
                       </span>
@@ -458,7 +465,7 @@ const Projects = () => {
 
                 {/* Collaboration & Attribution */}
                 {selectedProject.contribuitor && (
-                  <div className="text-xs font-mono text-muted-foreground pt-2">
+                  <div className="text-xs font-mono text-muted-foreground pt-1">
                     <span>{t.projects.collaboration}: </span>
                     <span className="text-foreground font-semibold">
                       {selectedProject.contribuitor}
@@ -467,12 +474,12 @@ const Projects = () => {
                 )}
 
                 {/* Action Buttons in Modal */}
-                <div className="pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                <div className="pt-4 sm:pt-6 border-t border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
                     <Button
                       asChild
                       size="default"
-                      className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium shadow-neon w-full sm:w-auto"
+                      className="h-10 px-4 text-xs sm:text-sm bg-primary text-primary-foreground hover:bg-primary/90 font-medium shadow-neon w-full sm:w-auto justify-center"
                     >
                       <a
                         href={selectedProject.liveUrl}
@@ -486,19 +493,19 @@ const Projects = () => {
 
                     {selectedProject.repositoryUrl && (
                       selectedProject.isPrivateRepo ? (
-                        <span
-                          className="inline-flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground/60 border border-white/10 rounded-md select-none font-mono"
+                        <div
+                          className="flex items-center justify-center gap-2 px-3.5 py-2 text-xs text-muted-foreground/60 border border-white/10 rounded-md select-none font-mono w-full sm:w-auto text-center"
                           title={t.projects.repository_private_tooltip}
                         >
-                          <Lock className="h-4 w-4" />
-                          <span>{t.projects.modal_private_repo_btn}</span>
-                        </span>
+                          <Lock className="h-3.5 w-3.5 shrink-0" />
+                          <span className="truncate">{t.projects.modal_private_repo_btn}</span>
+                        </div>
                       ) : (
                         <Button
                           asChild
                           variant="outline"
                           size="default"
-                          className="border-white/20 hover:border-primary/40 hover:bg-primary/10 text-foreground w-full sm:w-auto"
+                          className="h-10 px-4 text-xs sm:text-sm border-white/20 hover:border-primary/40 hover:bg-primary/10 text-foreground w-full sm:w-auto justify-center"
                         >
                           <a
                             href={selectedProject.repositoryUrl}
@@ -517,7 +524,7 @@ const Projects = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => setSelectedProject(null)}
-                    className="text-muted-foreground hover:text-foreground text-xs font-mono"
+                    className="text-muted-foreground hover:text-foreground text-xs font-mono h-9 w-full sm:w-auto"
                   >
                     {t.projects.modal_close_btn}
                   </Button>
