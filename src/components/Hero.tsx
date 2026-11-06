@@ -1,265 +1,430 @@
-import { useEffect, useRef } from "react";
-import { ArrowRight, ChevronDown, Github, Linkedin, Mail } from "lucide-react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { ArrowUpRight, ChevronDown, Github, Linkedin, Mail, Copy, Check, Sparkles, User, Terminal } from "lucide-react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import Eu from "@/assets/Eu.jpg";
-import gsap from "gsap";
-import { useLanguage } from "@/context/LanguageContext";
-import ParticleCanvas from "./ParticleCanvas";
+import { Spotlight } from "@/components/ui/spotlight";
 import MagneticButton from "./MagneticButton";
-
-const ROLES_PT = ["Full-Stack Developer", "React Specialist", "TypeScript Engineer", "Gov Tech Builder"];
-const ROLES_EN = ["Full-Stack Developer", "React Specialist", "TypeScript Engineer", "Gov Tech Builder"];
+import ParticleCanvas from "./ParticleCanvas";
+import { useLanguage } from "@/context/LanguageContext";
+import avatar3D from "@/assets/avatar-3d.png";
+import Eu from "@/assets/Eu.jpg";
 
 const Hero = () => {
   const { t, language } = useLanguage();
-  const imgRef = useRef<HTMLDivElement>(null);
-  const greetingRef = useRef<HTMLParagraphElement>(null);
-  const nameRef = useRef<HTMLHeadingElement>(null);
-  const roleRef = useRef<HTMLSpanElement>(null);
-  const descRef = useRef<HTMLParagraphElement>(null);
-  const btnsRef = useRef<HTMLDivElement>(null);
-  const socialsRef = useRef<HTMLDivElement>(null);
-  const cursorRef = useRef<HTMLSpanElement>(null);
-  const typeInterval = useRef<ReturnType<typeof setInterval> | null>(null);
-  const roleIndex = useRef(0);
+  const [avatarMode, setAvatarMode] = useState<"3d" | "photo">("3d");
+  const [copied, setCopied] = useState(false);
+  const [currentTime, setCurrentTime] = useState("");
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) element.scrollIntoView({ behavior: "smooth" });
-  };
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Typewriter effect
+  // Smooth mouse coordinates for 3D perspective parallax
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 25, stiffness: 120 };
+  const smoothMouseX = useSpring(mouseX, springConfig);
+  const smoothMouseY = useSpring(mouseY, springConfig);
+
+  // Parallax offsets for different layers
+  // Background text: subtle opposite movement
+  const textX = useTransform(smoothMouseX, [-0.5, 0.5], [18, -18]);
+  const textY = useTransform(smoothMouseY, [-0.5, 0.5], [14, -14]);
+
+  // Central character: 3D perspective tilt
+  const charRotateX = useTransform(smoothMouseY, [-0.5, 0.5], [8, -8]);
+  const charRotateY = useTransform(smoothMouseX, [-0.5, 0.5], [-10, 10]);
+  const charX = useTransform(smoothMouseX, [-0.5, 0.5], [-12, 12]);
+  const charY = useTransform(smoothMouseY, [-0.5, 0.5], [-10, 10]);
+
+  // Floating side cards: independent perspective depth
+  const leftCardsX = useTransform(smoothMouseX, [-0.5, 0.5], [-16, 16]);
+  const leftCardsY = useTransform(smoothMouseY, [-0.5, 0.5], [-12, 12]);
+  const rightCardsX = useTransform(smoothMouseX, [-0.5, 0.5], [-20, 20]);
+  const rightCardsY = useTransform(smoothMouseY, [-0.5, 0.5], [-14, 14]);
+
+  // Glow bloom center tracking
+  const bloomX = useTransform(smoothMouseX, [-0.5, 0.5], [-25, 25]);
+  const bloomY = useTransform(smoothMouseY, [-0.5, 0.5], [-20, 20]);
+
   useEffect(() => {
-    const roles = language === "pt" ? ROLES_PT : ROLES_EN;
-    let currentRole = 0;
-    let charIdx = 0;
-    let deleting = false;
-
-    const tick = () => {
-      const target = roles[currentRole];
-      if (!roleRef.current) return;
-
-      if (!deleting) {
-        roleRef.current.textContent = target.substring(0, charIdx + 1);
-        charIdx++;
-        if (charIdx === target.length) {
-          deleting = true;
-          clearInterval(typeInterval.current!);
-          typeInterval.current = setInterval(tick, 80);
-          setTimeout(() => {
-            clearInterval(typeInterval.current!);
-            typeInterval.current = setInterval(tick, 80);
-          }, 1800);
-        }
-      } else {
-        roleRef.current.textContent = target.substring(0, charIdx - 1);
-        charIdx--;
-        if (charIdx === 0) {
-          deleting = false;
-          currentRole = (currentRole + 1) % roles.length;
-          clearInterval(typeInterval.current!);
-          setTimeout(() => {
-            typeInterval.current = setInterval(tick, 80);
-          }, 400);
-        }
+    const updateRioTime = () => {
+      try {
+        const now = new Date();
+        const timeStr = new Intl.DateTimeFormat("pt-BR", {
+          timeZone: "America/Sao_Paulo",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(now);
+        setCurrentTime(timeStr);
+      } catch {
+        setCurrentTime("11:00");
       }
     };
-
-    setTimeout(() => {
-      typeInterval.current = setInterval(tick, 100);
-    }, 1400);
-
-    return () => {
-      if (typeInterval.current) clearInterval(typeInterval.current);
-    };
-  }, [language]);
-
-  // Cursor blink
-  useEffect(() => {
-    if (!cursorRef.current) return;
-    const ctx = gsap.context(() => {
-      gsap.to(cursorRef.current, {
-        opacity: 0,
-        repeat: -1,
-        yoyo: true,
-        duration: 0.5,
-        ease: "none",
-      });
-    });
-    return () => ctx.revert();
+    updateRioTime();
+    const interval = setInterval(updateRioTime, 30000);
+    return () => clearInterval(interval);
   }, []);
 
-  // Entrance timeline
-  useEffect(() => {
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const { innerWidth, innerHeight } = window;
+    const x = e.clientX / innerWidth - 0.5;
+    const y = e.clientY / innerHeight - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
 
-    tl.fromTo(
-      imgRef.current,
-      { opacity: 0, scale: 0.6, rotate: -12 },
-      { opacity: 1, scale: 1, rotate: 0, duration: 1.0, ease: "back.out(1.4)" }
-    )
-      .fromTo(
-        greetingRef.current,
-        { opacity: 0, x: -30 },
-        { opacity: 1, x: 0, duration: 0.5 },
-        "-=0.6"
-      )
-      .fromTo(
-        nameRef.current,
-        { opacity: 0, y: 40, skewX: -5 },
-        { opacity: 1, y: 0, skewX: 0, duration: 0.7 },
-        "-=0.3"
-      )
-      .fromTo(
-        roleRef.current?.parentElement ?? null,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5 },
-        "-=0.3"
-      )
-      .fromTo(
-        descRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5 },
-        "-=0.2"
-      )
-      .fromTo(
-        btnsRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5 },
-        "-=0.2"
-      )
-      .fromTo(
-        socialsRef.current?.children ?? null,
-        { opacity: 0, scale: 0.5, y: 10 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.4, stagger: 0.1 },
-        "-=0.2"
-      );
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
 
-    return () => { tl.kill(); };
-  }, []);
+  const copyEmail = () => {
+    navigator.clipboard.writeText("viniciusdiller@gmail.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2200);
+  };
 
-  // Mouse parallax on photo
-  useEffect(() => {
-    const handleMove = (e: MouseEvent) => {
-      if (!imgRef.current) return;
-      const { innerWidth, innerHeight } = window;
-      const x = (e.clientX / innerWidth - 0.5) * 18;
-      const y = (e.clientY / innerHeight - 0.5) * 18;
-      gsap.to(imgRef.current, { x, y, duration: 0.9, ease: "power2.out" });
-    };
-    window.addEventListener("mousemove", handleMove);
-    return () => window.removeEventListener("mousemove", handleMove);
-  }, []);
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <section
       id="home"
-      className="min-h-screen flex items-center justify-center pt-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#040711]"
+      style={{ perspective: "1200px" }}
     >
-      {/* Particle background */}
+      {/* Background canvas effects */}
       <ParticleCanvas />
 
-      {/* Ambient blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-float" style={{ animationDelay: "3s" }} />
+      {/* Atmospheric cybernetic bloom behind the 3D subject */}
+      <motion.div
+        style={{ x: bloomX, y: bloomY }}
+        className="pointer-events-none absolute w-[420px] sm:w-[600px] lg:w-[760px] h-[420px] sm:h-[600px] lg:h-[760px] rounded-full glow-bloom-cyan blur-3xl opacity-60 z-0"
+      />
+
+      {/* Top telemetry status pill */}
+      <div className="absolute top-20 sm:top-24 z-20 flex items-center justify-center w-full px-4 pointer-events-none">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="pointer-events-auto inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full hud-pill text-xs font-mono text-muted-foreground border border-primary/25 hover:border-primary/50 transition-colors shadow-lg"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
+          </span>
+          <span className="text-foreground/90 font-medium">
+            {t.hero.status_badge}
+          </span>
+          {currentTime && (
+            <span className="hidden sm:inline-flex items-center pl-2 border-l border-border/80 text-primary/80">
+              {t.hero.location} {currentTime}
+            </span>
+          )}
+        </motion.div>
       </div>
 
-      <div className="container mx-auto max-w-6xl relative z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+      {/* 
+        LAYER 0: Giant Monumental Typography Stacked Behind the Subject
+        (Depth Stacking - Sandwich effect)
+      */}
+      <motion.div
+        style={{ x: textX, y: textY }}
+        aria-hidden="true"
+        className="absolute inset-0 flex flex-col items-center justify-center select-none pointer-events-none z-0 overflow-hidden"
+      >
+        <span className="font-display font-black text-[18vw] sm:text-[15vw] lg:text-[12.5vw] tracking-tight text-white/[0.045] lg:text-white/[0.06] uppercase leading-[0.82] select-none text-center">
+          VINICIUS
+        </span>
+        <span className="font-display font-black text-[18vw] sm:text-[15vw] lg:text-[12.5vw] tracking-tight text-white/[0.045] lg:text-white/[0.06] uppercase leading-[0.82] select-none text-center">
+          DILLER
+        </span>
+      </motion.div>
 
-          {/* Photo with parallax */}
-          <div ref={imgRef} className="flex-shrink-0 opacity-0">
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 animate-glow" />
-              <img
-                src={Eu}
-                alt="Vinícius Diller"
-                className="relative w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 rounded-full object-cover border-4 border-background"
-              />
+      {/* Main 3-Column Cyber Grid */}
+      <div className="container max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-4 items-center">
+
+        {/* 
+          COLUMN 1: High-Authority Headline, Impact Metric, Primary CTAs
+        */}
+        <motion.div
+          style={{ x: leftCardsX, y: leftCardsY }}
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:col-span-4 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 order-2 lg:order-1"
+        >
+          {/* Main punchy tagline */}
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 text-primary text-xs font-mono uppercase tracking-widest px-2.5 py-1 rounded bg-primary/10 border border-primary/20">
+              <Terminal className="w-3.5 h-3.5" />
+              <span>Full-Stack Engineer</span>
             </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              {t.hero.tagline_start}{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-cyan-300 to-secondary glow-text">
+                {t.hero.tagline_highlight}
+              </span>
+            </h1>
           </div>
 
-          {/* Content */}
-          <div className="flex-1 text-center lg:text-left">
-            <div className="space-y-6">
+          {/* Metric / Authority Card with cursor Spotlight */}
+          <div className="relative w-full max-w-md cyber-glass rounded-2xl p-4 sm:p-5 text-left border border-white/10 group overflow-hidden">
+            <Spotlight className="from-primary/40 via-secondary/20 to-transparent" size={240} />
+            <div className="flex items-start justify-between gap-3 relative z-10">
               <div>
-                <p ref={greetingRef} className="text-primary font-mono text-sm sm:text-base mb-2 tracking-widest uppercase opacity-0">
-                  {t.hero.greeting}
+                <div className="font-display font-black text-2xl sm:text-3xl text-white tracking-tight flex items-baseline gap-1">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                    {t.hero.metric_value}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-snug">
+                  {t.hero.metric_sub}
                 </p>
-                <h1 ref={nameRef} className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-4 opacity-0">
-                  <span className="text-gradient glow-text">Vinícius Diller</span>
-                </h1>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-muted-foreground mb-6 opacity-0"
-                  ref={(el) => { if (el) el.style.opacity = "0"; }}
-                >
-                  <span ref={roleRef} className="text-primary"></span>
-                  <span ref={cursorRef} className="text-primary ml-0.5 opacity-100">|</span>
-                </h2>
               </div>
+              <span className="shrink-0 text-[10px] font-mono px-2 py-0.5 rounded-full bg-secondary/15 text-secondary border border-secondary/30">
+                GovTech
+              </span>
+            </div>
+          </div>
 
-              <p ref={descRef} className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed opacity-0">
-                {t.hero.description}
+          {/* Action CTAs */}
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 w-full pt-1">
+            <MagneticButton strength={0.25}>
+              <Button
+                onClick={() => scrollToSection("projects")}
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-background font-bold px-6 py-6 rounded-full shadow-lg hover:shadow-neon transition-all duration-300 flex items-center gap-2 group"
+              >
+                <span>{t.hero.cta_projects}</span>
+                <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </Button>
+            </MagneticButton>
+
+            <MagneticButton strength={0.25}>
+              <Button
+                onClick={() => scrollToSection("contact")}
+                variant="outline"
+                size="lg"
+                className="hud-pill text-foreground hover:text-primary hover:border-primary/60 font-semibold px-6 py-6 rounded-full transition-all duration-300"
+              >
+                {t.hero.cta_contact}
+              </Button>
+            </MagneticButton>
+          </div>
+        </motion.div>
+
+        {/* 
+          COLUMN 2: The 3D Subject (Centerpiece with 3D Tilt & Rim Light)
+        */}
+        <div className="lg:col-span-4 flex flex-col items-center justify-center relative order-1 lg:order-2">
+          {/* Avatar Switcher badge on top right of avatar */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5, duration: 0.4 }}
+            className="mb-3 z-30"
+          >
+            <div className="hud-pill inline-flex items-center gap-1 p-1 rounded-full border border-primary/25 text-[11px] font-mono">
+              <button
+                type="button"
+                onClick={() => setAvatarMode("3d")}
+                className={`flex items-center gap-1 px-3 py-1 rounded-full transition-all duration-200 ${
+                  avatarMode === "3d"
+                    ? "bg-primary text-background font-bold shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Sparkles className="w-3 h-3" />
+                <span>3D Render</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setAvatarMode("photo")}
+                className={`flex items-center gap-1 px-3 py-1 rounded-full transition-all duration-200 ${
+                  avatarMode === "photo"
+                    ? "bg-primary text-background font-bold shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <User className="w-3 h-3" />
+                <span>{language === "pt" ? "Foto Real" : "Photo"}</span>
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Interactive 3D Card / Frame */}
+          <motion.div
+            style={{
+              x: charX,
+              y: charY,
+              rotateX: charRotateX,
+              rotateY: charRotateY,
+              transformStyle: "preserve-3d",
+            }}
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+            className="relative flex items-center justify-center select-none"
+          >
+            {avatarMode === "3d" ? (
+              <div className="relative group cursor-pointer">
+                {/* Holographic rim light contour */}
+                <div className="absolute -inset-2 rounded-3xl bg-gradient-to-b from-primary/30 via-transparent to-secondary/30 blur-xl opacity-70 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
+                <div className="relative w-64 sm:w-72 md:w-80 lg:w-[350px] aspect-square rounded-3xl overflow-hidden border border-primary/30 shadow-2xl bg-black/40">
+                  <img
+                    src={avatar3D}
+                    alt="Vinícius Diller 3D Cyberpunk Avatar"
+                    className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
+                    style={{
+                      maskImage: "radial-gradient(ellipse at 50% 48%, black 65%, transparent 95%)",
+                      WebkitMaskImage: "radial-gradient(ellipse at 50% 48%, black 65%, transparent 95%)",
+                    }}
+                  />
+                  {/* Subtle specular scanline highlight */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-primary/10 pointer-events-none" />
+                </div>
+              </div>
+            ) : (
+              <div className="relative group cursor-pointer">
+                <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-primary to-secondary blur-xl opacity-60 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none animate-glow" />
+
+                <div className="relative w-56 sm:w-64 lg:w-72 aspect-square rounded-full overflow-hidden border-2 border-primary/60 shadow-2xl bg-background">
+                  <img
+                    src={Eu}
+                    alt="Vinícius Diller"
+                    className="w-full h-full object-cover object-top transform group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-full pointer-events-none" />
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </div>
+
+        {/* 
+          COLUMN 3: Context Cards ("Sobre mim", "Contato por e-mail", Socials)
+        */}
+        <motion.div
+          style={{ x: rightCardsX, y: rightCardsY }}
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:col-span-4 flex flex-col space-y-4 order-3 w-full max-w-md mx-auto lg:mx-0"
+        >
+          {/* Card 1: Sobre mim */}
+          <div className="relative cyber-glass rounded-2xl p-5 border border-white/10 group overflow-hidden">
+            <Spotlight className="from-secondary/30 via-primary/20 to-transparent" size={220} />
+            <div className="relative z-10 space-y-2 text-left">
+              <h2 className="text-sm font-mono uppercase tracking-wider text-primary font-bold flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                {t.hero.about_card_title}
+              </h2>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                {t.hero.about_card_body}
               </p>
+              <div className="pt-2 flex flex-wrap gap-1.5">
+                {["React", "Node.js", "TypeScript", "Tailwind", "APIs"].map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-foreground/80"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
 
-              <div ref={btnsRef} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start opacity-0">
-                <MagneticButton>
-                  <Button
-                    onClick={() => scrollToSection("projects")}
-                    size="lg"
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold group shadow-lg hover:shadow-neon transition-all magnetic"
-                  >
-                    {t.hero.cta_projects}
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </MagneticButton>
-                <MagneticButton>
-                  <Button
-                    onClick={() => scrollToSection("contact")}
-                    variant="outline"
-                    size="lg"
-                    className="border-primary text-primary hover:bg-primary hover:text-black font-semibold magnetic"
-                  >
-                    {t.hero.cta_contact}
-                  </Button>
-                </MagneticButton>
+          {/* Card 2: Contato por e-mail & Redes */}
+          <div className="relative cyber-glass rounded-2xl p-5 border border-white/10 group overflow-hidden">
+            <Spotlight className="from-primary/30 via-cyan-400/20 to-transparent" size={220} />
+            <div className="relative z-10 space-y-3 text-left">
+              <div>
+                <h2 className="text-sm font-mono uppercase tracking-wider text-secondary font-bold flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+                  {t.hero.contact_card_title}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {t.hero.contact_card_subtitle}
+                </p>
               </div>
 
-              {/* Social Links */}
-              <div ref={socialsRef} className="flex gap-4 justify-center lg:justify-start pt-4">
-                <a href="https://github.com/viniciusdiller" target="_blank" rel="noopener noreferrer"
-                  className="w-12 h-12 rounded-full border border-border flex items-center justify-center hover:border-primary hover:text-primary hover:scale-110 transition-all opacity-0">
-                  <Github className="h-5 w-5" />
+              {/* Email Pill with Quick Copy */}
+              <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-xl bg-black/40 border border-white/10 group/pill hover:border-primary/50 transition-colors">
+                <span className="text-xs font-mono text-foreground/90 truncate mr-2 select-all">
+                  viniciusdiller@gmail.com
+                </span>
+                <button
+                  type="button"
+                  onClick={copyEmail}
+                  aria-label="Copiar e-mail"
+                  className="shrink-0 p-1.5 rounded-lg bg-primary/10 hover:bg-primary text-primary hover:text-background transition-colors"
+                >
+                  {copied ? (
+                    <Check className="w-4 h-4 text-secondary" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+
+              {/* Social Circles */}
+              <div className="flex items-center gap-2.5 pt-1">
+                <a
+                  href="https://github.com/viniciusdiller"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                  className="w-9 h-9 rounded-full hud-pill flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/60 hover:scale-105 transition-all"
+                >
+                  <Github className="w-4 h-4" />
                 </a>
-                <a href="https://www.linkedin.com/in/viniciusdiller/" target="_blank" rel="noopener noreferrer"
-                  className="w-12 h-12 rounded-full border border-border flex items-center justify-center hover:border-primary hover:text-primary hover:scale-110 transition-all opacity-0">
-                  <Linkedin className="h-5 w-5" />
+                <a
+                  href="https://www.linkedin.com/in/viniciusdiller/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  className="w-9 h-9 rounded-full hud-pill flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/60 hover:scale-105 transition-all"
+                >
+                  <Linkedin className="w-4 h-4" />
                 </a>
-                <a href="mailto:viniciusdiller@gmail.com"
-                  className="w-12 h-12 rounded-full border border-border flex items-center justify-center hover:border-primary hover:text-primary hover:scale-110 transition-all opacity-0">
-                  <Mail className="h-5 w-5" />
+                <a
+                  href="mailto:viniciusdiller@gmail.com"
+                  aria-label="E-mail direto"
+                  className="w-9 h-9 rounded-full hud-pill flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/60 hover:scale-105 transition-all"
+                >
+                  <Mail className="w-4 h-4" />
                 </a>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Scroll cue */}
+      {/* Scroll cue to next section */}
       <motion.button
         onClick={() => scrollToSection("about")}
-        aria-label={language === "pt" ? "Rolar para a seção sobre" : "Scroll to about section"}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+        aria-label="Rolar para próxima seção"
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1 text-muted-foreground hover:text-primary transition-colors text-xs font-mono"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.6, duration: 0.6 }}
+        transition={{ delay: 1.2, duration: 0.6 }}
       >
+        <span className="text-[10px] tracking-widest uppercase opacity-70">Scroll</span>
         <motion.span
-          animate={{ y: [0, 8, 0] }}
+          animate={{ y: [0, 6, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         >
-          <ChevronDown className="h-6 w-6" />
+          <ChevronDown className="h-4 w-4" />
         </motion.span>
       </motion.button>
     </section>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 
 const Navbar = () => {
@@ -9,13 +8,32 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 40);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const updateTime = () => {
+      try {
+        const timeStr = new Intl.DateTimeFormat("pt-BR", {
+          timeZone: "America/Sao_Paulo",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(new Date());
+        setCurrentTime(timeStr);
+      } catch {
+        setCurrentTime("11:00");
+      }
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const navLinks = [
@@ -38,7 +56,7 @@ const Navbar = () => {
           }
         });
       },
-      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+      { rootMargin: "-40% 0px -40% 0px", threshold: 0 }
     );
 
     sections.forEach((section) => observer.observe(section));
@@ -55,133 +73,135 @@ const Navbar = () => {
   };
 
   return (
-    <motion.nav
-      initial={{ y: -80, opacity: 0 }}
+    <motion.header
+      initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-background/95 backdrop-blur-md border-b border-border/50 shadow-lg"
-          : "bg-transparent"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 pt-3 sm:pt-4 px-4 pointer-events-none"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
-          <button
-            onClick={() => scrollToSection("home")}
-            className="text-xl sm:text-2xl font-bold font-mono text-gradient hover:scale-105 transition-transform"
-          >
-            {"<VD />"}
-          </button>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
-            {navLinks.map((link) => (
+      <div className="container max-w-6xl mx-auto flex items-center justify-between gap-3">
+        {/* Left Island: Nav Links & Live Location */}
+        <div className="pointer-events-auto hidden md:flex items-center gap-1.5 p-1 rounded-full hud-pill cyber-glass border border-white/10 shadow-lg">
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.id;
+            return (
               <button
                 key={link.id}
+                type="button"
                 onClick={() => scrollToSection(link.id)}
-                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                  activeSection === link.id
-                    ? "text-primary"
-                    : "text-foreground hover:text-primary"
+                className={`relative px-3.5 py-1.5 text-xs font-mono font-medium rounded-full transition-colors duration-200 ${
+                  isActive
+                    ? "text-primary font-bold"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {activeSection === link.id && (
+                {isActive && (
                   <motion.span
-                    layoutId="navbar-active-pill"
-                    className="absolute inset-0 rounded-md bg-primary/10 border border-primary/30"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    layoutId="navbar-pill-indicator"
+                    className="absolute inset-0 rounded-full bg-primary/15 border border-primary/40 shadow-sm"
+                    transition={{ type: "spring", stiffness: 350, damping: 28 }}
                   />
                 )}
                 <span className="relative z-10">{link.label}</span>
               </button>
-            ))}
-            {/* Language Toggle */}
-            <button
-              onClick={() => setLanguage(language === "pt" ? "en" : "pt")}
-              className="ml-2 px-3 py-1.5 rounded-md border border-primary/40 text-primary font-mono text-sm hover:bg-primary/10 hover:border-primary transition-all duration-200 font-semibold tracking-wider"
-              aria-label="Toggle language"
-            >
-              {language === "pt" ? "EN" : "PT"}
-            </button>
-          </div>
+            );
+          })}
 
-          {/* Mobile: Language + Menu Button */}
-          <div className="flex items-center gap-2 md:hidden">
-            <button
-              onClick={() => setLanguage(language === "pt" ? "en" : "pt")}
-              className="px-3 py-1.5 rounded-md border border-primary/40 text-primary font-mono text-sm hover:bg-primary/10 hover:border-primary transition-all duration-200 font-semibold tracking-wider"
-              aria-label="Toggle language"
-            >
-              {language === "pt" ? "EN" : "PT"}
-            </button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                {isMobileMenuOpen ? (
-                  <motion.span
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex"
-                  >
-                    <X className="h-6 w-6" />
-                  </motion.span>
-                ) : (
-                  <motion.span
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex"
-                  >
-                    <Menu className="h-6 w-6" />
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </Button>
-          </div>
+          {currentTime && (
+            <div className="hidden lg:flex items-center gap-1.5 pl-3 pr-3 py-1 ml-1 border-l border-white/10 text-[11px] font-mono text-muted-foreground">
+              <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
+              <span>Rio de Janeiro {currentTime}</span>
+            </div>
+          )}
         </div>
 
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="md:hidden overflow-hidden border-t border-border/50"
-            >
-              <div className="py-4 space-y-1">
-                {navLinks.map((link, i) => (
-                  <motion.button
-                    key={link.id}
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05, duration: 0.25 }}
-                    onClick={() => scrollToSection(link.id)}
-                    className={`w-full text-left px-4 py-2.5 rounded-md transition-colors ${
-                      activeSection === link.id
-                        ? "text-primary bg-primary/10"
-                        : "text-foreground hover:text-primary hover:bg-muted/50"
-                    }`}
-                  >
-                    {link.label}
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Center: Brand Monogram */}
+        <div className="pointer-events-auto flex items-center">
+          <button
+            type="button"
+            onClick={() => scrollToSection("home")}
+            className="group flex items-center gap-1 px-3.5 py-1.5 rounded-full hud-pill cyber-glass border border-white/10 hover:border-primary/50 transition-all shadow-lg"
+          >
+            <span className="font-display font-black text-sm tracking-widest text-foreground group-hover:text-primary transition-colors">
+              VD
+            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-primary group-hover:bg-secondary transition-colors" />
+          </button>
+        </div>
+
+        {/* Right Island: Language Toggle & Primary CTA */}
+        <div className="pointer-events-auto flex items-center gap-2">
+          {/* Language Toggle */}
+          <button
+            type="button"
+            onClick={() => setLanguage(language === "pt" ? "en" : "pt")}
+            className="px-3 py-1.5 rounded-full hud-pill cyber-glass border border-white/10 hover:border-primary/40 text-primary font-mono text-xs font-semibold tracking-wider transition-all"
+            aria-label="Alternar idioma"
+          >
+            {language === "pt" ? "EN" : "PT"}
+          </button>
+
+          {/* Fale comigo button */}
+          <button
+            type="button"
+            onClick={() => scrollToSection("contact")}
+            className="hidden sm:inline-flex items-center gap-1 px-4 py-1.5 rounded-full bg-primary hover:bg-primary/90 text-background font-bold text-xs tracking-wide shadow-md hover:shadow-neon transition-all"
+          >
+            <span>{language === "pt" ? "Fale comigo" : "Get in touch"}</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </button>
+
+          {/* Mobile Menu Trigger */}
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 rounded-full hud-pill cyber-glass border border-white/10 text-muted-foreground hover:text-foreground"
+            aria-label="Abrir menu"
+          >
+            {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
+        </div>
       </div>
-    </motion.nav>
+
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="pointer-events-auto md:hidden mt-2 container max-w-sm mx-auto"
+          >
+            <div className="cyber-glass rounded-2xl p-3 border border-white/15 shadow-2xl space-y-1">
+              {navLinks.map((link) => (
+                <button
+                  key={link.id}
+                  type="button"
+                  onClick={() => scrollToSection(link.id)}
+                  className={`w-full text-left px-3.5 py-2 rounded-xl text-xs font-mono transition-colors ${
+                    activeSection === link.id
+                      ? "text-primary bg-primary/10 font-bold border border-primary/20"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                  }`}
+                >
+                  {link.label}
+                </button>
+              ))}
+
+              <button
+                type="button"
+                onClick={() => scrollToSection("contact")}
+                className="w-full mt-2 py-2 rounded-xl bg-primary text-background text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow-md"
+              >
+                <span>{language === "pt" ? "Fale comigo" : "Get in touch"}</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 };
 

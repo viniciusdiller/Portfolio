@@ -55,6 +55,7 @@ export default {
       fontFamily: {
         sans: ['Outfit', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
+        display: ['Syne', 'Outfit', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
