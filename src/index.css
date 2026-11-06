@@ -41,11 +41,6 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Outfit', sans-serif;
-    /* Hide native cursor when custom cursor is active (non-touch devices) */
-    cursor: none;
-  }
-  @media (hover: none) {
-    body { cursor: auto; }
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Outfit', sans-serif;
@@ -53,14 +48,11 @@
   }
   code, pre { font-family: 'JetBrains Mono', monospace; }
   html { scroll-behavior: smooth; }
-  /* Restore pointer for all interactive elements */
-  a, button, [role="button"], input, textarea, select, label {
-    cursor: none !important;
+  a, button, [role="button"] {
+    cursor: pointer;
   }
-  @media (hover: none) {
-    a, button, [role="button"], input, textarea, select, label {
-      cursor: auto !important;
-    }
+  input, textarea, select {
+    cursor: auto;
   }
 }
 
