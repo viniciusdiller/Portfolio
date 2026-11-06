@@ -68,6 +68,10 @@ export const en = {
     modal_repo_btn: "Code on GitHub",
     modal_private_repo_btn: "Confidential Code (Private / NDA)",
     modal_close_btn: "Close",
+    pagination_prev: "Previous page",
+    pagination_next: "Next page",
+    pagination_page: "Page",
+    pagination_of: "of",
   },
   contact: {
     title: "Get in",

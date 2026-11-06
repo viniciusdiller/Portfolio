@@ -5,6 +5,7 @@ import {
   Github,
   Lock,
   Terminal,
+  ChevronLeft,
   ChevronRight,
   Maximize2,
   Sparkles,
@@ -15,7 +16,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -27,6 +27,8 @@ import SplitTitle from "./SplitTitle";
 import SpotlightCard from "./SpotlightCard";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const PROJECTS_PER_PAGE = 6;
 
 const formatDisplayUrl = (url: string) => {
   try {
@@ -46,10 +48,25 @@ const Projects = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const dividerRef = useRef<HTMLDivElement>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const isPt = language === "pt";
 
   const projects = useMemo(() => getProjects(isPt), [isPt]);
+  const totalPages = Math.ceil(projects.length / PROJECTS_PER_PAGE);
+
+  const paginatedProjects = useMemo(() => {
+    const startIndex = (currentPage - 1) * PROJECTS_PER_PAGE;
+    return projects.slice(startIndex, startIndex + PROJECTS_PER_PAGE);
+  }, [projects, currentPage]);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    sectionRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -114,7 +131,7 @@ const Projects = () => {
 
         {/* Grid of Projects */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {projects.map((project) => {
+          {paginatedProjects.map((project) => {
             const displayUrl = formatDisplayUrl(project.liveUrl);
 
             return (
@@ -290,6 +307,57 @@ const Projects = () => {
             );
           })}
         </div>
+
+        {/* Pagination Navigation */}
+        {totalPages > 1 && (
+          <nav
+            aria-label={isPt ? "Navegação entre páginas de projetos" : "Projects page navigation"}
+            className="mt-12 sm:mt-16 flex items-center justify-center gap-2 sm:gap-3"
+          >
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => goToPage(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              aria-label={t.projects.pagination_prev}
+              className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl cyber-glass border-white/10 hover:border-primary/40 hover:bg-primary/10 text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:pointer-events-none transition-all"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-xl cyber-glass border border-white/10">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                const isActive = page === currentPage;
+                return (
+                  <button
+                    key={page}
+                    onClick={() => goToPage(page)}
+                    aria-current={isActive ? "page" : undefined}
+                    aria-label={`${t.projects.pagination_page} ${page}`}
+                    className={`h-8 w-8 sm:h-9 sm:w-9 rounded-lg font-mono text-xs sm:text-sm font-medium transition-all ${
+                      isActive
+                        ? "bg-primary text-primary-foreground font-bold shadow-neon border border-primary"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                );
+              })}
+            </div>
+
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => goToPage(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              aria-label={t.projects.pagination_next}
+              className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl cyber-glass border-white/10 hover:border-primary/40 hover:bg-primary/10 text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:pointer-events-none transition-all"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </nav>
+        )}
       </div>
 
       {/* Project Details Modal / Popup */}
