@@ -374,7 +374,7 @@ const Hero = () => {
 
               {/* Interactive Tech Badges */}
               <div className="pt-1 flex flex-wrap gap-1.5">
-                {["React 19", "Node.js", "TypeScript", "Next.js", "MySQL", "Tailwind"].map((tag) => (
+                {["React 19", "NestJS", "TypeScript", "Node.js", "SQL", "Deploy", "APIs", "Testes Unitários", "Tailwind"].map((tag) => (
                   <span
                     key={tag}
                     className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-foreground/80 hover:border-primary/50 hover:text-primary transition-colors cursor-default"

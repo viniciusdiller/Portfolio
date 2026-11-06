@@ -29,9 +29,9 @@ const Footer = () => {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="text-xl font-bold font-mono text-gradient hover:scale-105 transition-transform cursor-pointer"
+            className="text-sm font-bold font-mono tracking-wider text-gradient hover:scale-105 transition-transform"
           >
-            {"<VD />"}
+            VINÍCIUS DILLER
           </button>
           <p className="text-sm text-muted-foreground flex items-center gap-1.5">
             {t.footer.made_with}

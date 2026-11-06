@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Mail, Github, Linkedin, Send, Check } from "lucide-react";
+import { Mail, Github, Linkedin, Send, Check, Terminal } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -93,31 +93,35 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" ref={sectionRef} className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-16">
-          <SplitTitle as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+    <section id="contact" ref={sectionRef} className="py-24 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div className="container mx-auto max-w-6xl relative z-10">
+        <div className="text-center mb-16 space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full hud-pill text-xs font-mono text-primary border border-primary/25 mb-1">
+            <Terminal className="w-3.5 h-3.5" />
+            <span>[ 04 // PROTOCOLO DE CONTATO ]</span>
+          </div>
+          <SplitTitle as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
             {`${t.contact.title} ${t.contact.title_highlight}`}
           </SplitTitle>
-          <div ref={dividerRef} className="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full mb-6" />
-          <p ref={subtitleRef} className="text-lg text-muted-foreground max-w-2xl mx-auto opacity-0">{t.contact.subtitle}</p>
+          <div ref={dividerRef} className="w-24 h-1 bg-gradient-to-r from-primary via-cyan-300 to-secondary mx-auto rounded-full mt-3 mb-6" />
+          <p ref={subtitleRef} className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto opacity-0">{t.contact.subtitle}</p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="grid lg:grid-cols-2 gap-8 items-stretch">
           <div ref={formCardRef} className="opacity-0">
-            <Card className="card-glass p-8">
+            <Card className="cyber-glass cyber-corners p-8 border border-white/10 shadow-2xl h-full">
               <form ref={form} onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium mb-2">{t.contact.name_label}</label>
-                  <Input id="name" name="name" value={formData.name} onChange={handleChange} placeholder={t.contact.name_placeholder} required className="bg-background/50 border-border focus:border-primary" disabled={isSubmitting} autoComplete="name" />
+                  <label htmlFor="name" className="block text-xs font-mono text-muted-foreground uppercase tracking-wider mb-2">{t.contact.name_label}</label>
+                  <Input id="name" name="name" value={formData.name} onChange={handleChange} placeholder={t.contact.name_placeholder} required className="bg-black/50 border-white/10 focus:border-primary text-sm font-mono rounded-xl" disabled={isSubmitting} autoComplete="name" />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">{t.contact.email_label}</label>
-                  <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} placeholder={t.contact.email_placeholder} required className="bg-background/50 border-border focus:border-primary" disabled={isSubmitting} autoComplete="email" />
+                  <label htmlFor="email" className="block text-xs font-mono text-muted-foreground uppercase tracking-wider mb-2">{t.contact.email_label}</label>
+                  <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} placeholder={t.contact.email_placeholder} required className="bg-black/50 border-white/10 focus:border-primary text-sm font-mono rounded-xl" disabled={isSubmitting} autoComplete="email" />
                 </div>
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium mb-2">{t.contact.message_label}</label>
-                  <Textarea id="message" name="message" value={formData.message} onChange={handleChange} placeholder={t.contact.message_placeholder} rows={6} required className="bg-background/50 border-border focus:border-primary resize-none" disabled={isSubmitting} />
+                  <label htmlFor="message" className="block text-xs font-mono text-muted-foreground uppercase tracking-wider mb-2">{t.contact.message_label}</label>
+                  <Textarea id="message" name="message" value={formData.message} onChange={handleChange} placeholder={t.contact.message_placeholder} rows={6} required className="bg-black/50 border-white/10 focus:border-primary text-sm font-mono rounded-xl resize-none" disabled={isSubmitting} />
                 </div>
                 <MagneticButton className="block w-full" strength={0.15}>
                   <Button
@@ -160,7 +164,7 @@ const Contact = () => {
           </div>
 
           <div ref={infoCardRef} className="opacity-0">
-            <Card className="card-glass p-8 h-full">
+            <Card className="cyber-glass cyber-corners p-8 h-full border border-white/10 shadow-2xl flex flex-col justify-between">
               <h3 className="text-2xl font-bold mb-8">{t.contact.info_title}</h3>
               <div className="space-y-6">
                 {socialLinks.map((link, index) => (

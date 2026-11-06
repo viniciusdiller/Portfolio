@@ -43,8 +43,13 @@
     font-family: 'Outfit', sans-serif;
   }
   @media (hover: hover) and (pointer: fine) {
-    body, a, button, [role="button"], label {
+    *, *::before, *::after, html, body, a, button, [role="button"], input, textarea, select, label {
       cursor: none !important;
+    }
+  }
+  @media (hover: none) or (pointer: coarse) {
+    *, *::before, *::after, html, body, a, button, [role="button"], input, textarea, select, label {
+      cursor: auto !important;
     }
   }
   h1, h2, h3, h4, h5, h6 {

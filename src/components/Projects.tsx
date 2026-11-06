@@ -6,6 +6,7 @@ import {
   Code2,
   Github,
   Lock,
+  Terminal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -148,20 +149,24 @@ const Projects = () => {
       className="scroll-mt-20 py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-muted/30"
     >
       <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full hud-pill text-xs font-mono text-primary border border-primary/25 mb-1">
+            <Terminal className="w-3.5 h-3.5" />
+            <span>[ 02 // CATÁLOGO DE ENGENHARIA ]</span>
+          </div>
           <SplitTitle
             as="h2"
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight"
           >
             {`${t.projects.title} ${t.projects.title_highlight}`}
           </SplitTitle>
           <div
             ref={dividerRef}
-            className="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full mb-6"
+            className="w-24 h-1 bg-gradient-to-r from-primary via-cyan-300 to-secondary mx-auto rounded-full mt-3 mb-6"
           />
           <p
             ref={subtitleRef}
-            className="text-lg text-muted-foreground max-w-2xl mx-auto opacity-0"
+            className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto opacity-0"
           >
             {t.projects.subtitle}
           </p>
@@ -169,9 +174,9 @@ const Projects = () => {
 
         <div ref={destaqueRef} className="space-y-12 mb-20">
           {destaqueProjects.map((project, index) => (
-            <SpotlightCard key={`destaque-${index}`} className="rounded-xl opacity-0">
+            <SpotlightCard key={`destaque-${index}`} className="rounded-2xl opacity-0">
             <Card
-              className="overflow-hidden card-glass border-primary/20 hover:border-primary/50 transition-all duration-300 group shadow-lg"
+              className="overflow-hidden cyber-glass cyber-corners border-white/10 hover:border-primary/50 transition-all duration-300 group shadow-2xl"
             >
               <div className="grid lg:grid-cols-2 gap-0">
                 <div className="relative overflow-hidden h-64 lg:h-auto min-h-[300px]">
@@ -302,9 +307,9 @@ const Projects = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {pageProjects.map((project, index) => (
-            <SpotlightCard key={`normal-${index}`} className="rounded-xl opacity-0">
+            <SpotlightCard key={`normal-${index}`} className="rounded-2xl opacity-0">
             <Card
-              className="overflow-hidden card-glass hover:border-primary/50 transition-all duration-300 group hover:scale-[1.03]"
+              className="overflow-hidden cyber-glass cyber-corners border-white/10 hover:border-primary/50 transition-all duration-300 group shadow-xl hover:scale-[1.02] flex flex-col justify-between h-full"
             >
               <div className="relative h-48 overflow-hidden">
                 <a
