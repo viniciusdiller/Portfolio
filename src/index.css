@@ -42,18 +42,17 @@
     @apply bg-background text-foreground;
     font-family: 'Outfit', sans-serif;
   }
+  @media (hover: hover) and (pointer: fine) {
+    body, a, button, [role="button"], label {
+      cursor: none !important;
+    }
+  }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
   }
   code, pre { font-family: 'JetBrains Mono', monospace; }
   html { scroll-behavior: smooth; }
-  a, button, [role="button"] {
-    cursor: pointer;
-  }
-  input, textarea, select {
-    cursor: auto;
-  }
 }
 
 @layer utilities {

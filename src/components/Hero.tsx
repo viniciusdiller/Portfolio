@@ -191,7 +191,7 @@ const Hero = () => {
                 </p>
               </div>
               <span className="shrink-0 text-[10px] font-mono px-2 py-0.5 rounded-full bg-secondary/15 text-secondary border border-secondary/30">
-                GovTech
+                {t.hero.metric_badge}
               </span>
             </div>
           </div>
