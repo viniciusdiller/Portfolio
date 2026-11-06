@@ -125,7 +125,31 @@
   .magnetic:active {
     transform: scale(0.97) !important;
   }
-  /* Gradient border animation */
+  /* Cyber corner brackets */
+  .cyber-corners {
+    position: relative;
+  }
+  .cyber-corners::before, .cyber-corners::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-color: hsl(var(--primary) / 0.6);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .cyber-corners::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1.5px solid;
+    border-left: 1.5px solid;
+  }
+  .cyber-corners::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 1.5px solid;
+    border-right: 1.5px solid;
+  }
   @property --border-angle {
     syntax: '<angle>';
     initial-value: 0deg;

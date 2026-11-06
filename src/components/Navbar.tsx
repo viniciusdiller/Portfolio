@@ -5,18 +5,9 @@ import { useLanguage } from "@/context/LanguageContext";
 
 const Navbar = () => {
   const { language, setLanguage, t } = useLanguage();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [currentTime, setCurrentTime] = useState("");
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     const updateTime = () => {
@@ -28,7 +19,7 @@ const Navbar = () => {
         }).format(new Date());
         setCurrentTime(timeStr);
       } catch {
-        setCurrentTime("11:00");
+        setCurrentTime("13:00");
       }
     };
     updateTime();
@@ -77,11 +68,11 @@ const Navbar = () => {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 left-0 right-0 z-50 pt-3 sm:pt-4 px-4 pointer-events-none"
+      className="fixed top-0 left-0 right-0 z-50 pt-3 sm:pt-4 px-4 pointer-events-none flex justify-center"
     >
-      <div className="container max-w-6xl mx-auto flex items-center justify-between gap-3">
-        {/* Left Island: Nav Links & Live Location */}
-        <div className="pointer-events-auto hidden md:flex items-center gap-1.5 p-1 rounded-full hud-pill cyber-glass border border-white/10 shadow-lg">
+      <div className="pointer-events-auto flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-full hud-pill cyber-glass border border-white/10 shadow-2xl backdrop-blur-xl">
+        {/* Desktop Nav Links */}
+        <div className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => {
             const isActive = activeSection === link.id;
             return (
@@ -106,61 +97,45 @@ const Navbar = () => {
               </button>
             );
           })}
-
-          {currentTime && (
-            <div className="hidden lg:flex items-center gap-1.5 pl-3 pr-3 py-1 ml-1 border-l border-white/10 text-[11px] font-mono text-muted-foreground">
-              <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
-              <span>Rio de Janeiro {currentTime}</span>
-            </div>
-          )}
         </div>
 
-        {/* Center: Brand Monogram */}
-        <div className="pointer-events-auto flex items-center">
-          <button
-            type="button"
-            onClick={() => scrollToSection("home")}
-            className="group flex items-center gap-1 px-3.5 py-1.5 rounded-full hud-pill cyber-glass border border-white/10 hover:border-primary/50 transition-all shadow-lg"
-          >
-            <span className="font-display font-black text-sm tracking-widest text-foreground group-hover:text-primary transition-colors">
-              VD
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-primary group-hover:bg-secondary transition-colors" />
-          </button>
-        </div>
+        {/* Live Rio de Janeiro Clock Telemetry */}
+        {currentTime && (
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 border-l border-white/10 text-[11px] font-mono text-muted-foreground">
+            <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
+            <span>Rio de Janeiro {currentTime}</span>
+          </div>
+        )}
 
-        {/* Right Island: Language Toggle & Primary CTA */}
-        <div className="pointer-events-auto flex items-center gap-2">
-          {/* Language Toggle */}
-          <button
-            type="button"
-            onClick={() => setLanguage(language === "pt" ? "en" : "pt")}
-            className="px-3 py-1.5 rounded-full hud-pill cyber-glass border border-white/10 hover:border-primary/40 text-primary font-mono text-xs font-semibold tracking-wider transition-all"
-            aria-label="Alternar idioma"
-          >
-            {language === "pt" ? "EN" : "PT"}
-          </button>
+        {/* Language Toggle */}
+        <button
+          type="button"
+          onClick={() => setLanguage(language === "pt" ? "en" : "pt")}
+          className="px-2.5 py-1 rounded-full border border-white/10 hover:border-primary/40 text-primary font-mono text-xs font-semibold tracking-wider transition-all"
+          aria-label="Alternar idioma"
+        >
+          {language === "pt" ? "EN" : "PT"}
+        </button>
 
-          {/* Fale comigo button */}
-          <button
-            type="button"
-            onClick={() => scrollToSection("contact")}
-            className="hidden sm:inline-flex items-center gap-1 px-4 py-1.5 rounded-full bg-primary hover:bg-primary/90 text-background font-bold text-xs tracking-wide shadow-md hover:shadow-neon transition-all"
-          >
-            <span>{language === "pt" ? "Fale comigo" : "Get in touch"}</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </button>
+        {/* Fale comigo Primary CTA */}
+        <button
+          type="button"
+          onClick={() => scrollToSection("contact")}
+          className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full bg-primary hover:bg-primary/90 text-background font-bold text-xs tracking-wide shadow-md hover:shadow-neon transition-all"
+        >
+          <span>{language === "pt" ? "Fale comigo" : "Get in touch"}</span>
+          <ArrowUpRight className="w-3.5 h-3.5" />
+        </button>
 
-          {/* Mobile Menu Trigger */}
-          <button
-            type="button"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-full hud-pill cyber-glass border border-white/10 text-muted-foreground hover:text-foreground"
-            aria-label="Abrir menu"
-          >
-            {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-          </button>
-        </div>
+        {/* Mobile Menu Trigger */}
+        <button
+          type="button"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden p-1.5 rounded-full text-muted-foreground hover:text-foreground"
+          aria-label="Abrir menu"
+        >
+          {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+        </button>
       </div>
 
       {/* Mobile Drawer */}
@@ -171,7 +146,7 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="pointer-events-auto md:hidden mt-2 container max-w-sm mx-auto"
+            className="pointer-events-auto md:hidden fixed top-16 left-4 right-4 max-w-xs mx-auto"
           >
             <div className="cyber-glass rounded-2xl p-3 border border-white/15 shadow-2xl space-y-1">
               {navLinks.map((link) => (
@@ -188,15 +163,6 @@ const Navbar = () => {
                   {link.label}
                 </button>
               ))}
-
-              <button
-                type="button"
-                onClick={() => scrollToSection("contact")}
-                className="w-full mt-2 py-2 rounded-xl bg-primary text-background text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow-md"
-              >
-                <span>{language === "pt" ? "Fale comigo" : "Get in touch"}</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
             </div>
           </motion.div>
         )}
