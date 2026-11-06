@@ -1,55 +1,69 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import {
-  ChevronLeft,
-  ChevronRight,
   ExternalLink,
   Code2,
   Github,
   Lock,
   Terminal,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
-import { getProjects } from "@/lib/Projects";
+import { getProjects, type ProjectCategory } from "@/lib/Projects";
 import SplitTitle from "./SplitTitle";
 import SpotlightCard from "./SpotlightCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const PROJECTS_PER_PAGE = 6;
+type FilterCategory = "all" | ProjectCategory;
+
+const formatDisplayUrl = (url: string) => {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "");
+    if (parsed.pathname && parsed.pathname !== "/") {
+      return `${host}${parsed.pathname}`;
+    }
+    return host;
+  } catch {
+    return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  }
+};
 
 const Projects = () => {
   const { t, language } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const dividerRef = useRef<HTMLDivElement>(null);
-  const destaqueRef = useRef<HTMLDivElement>(null);
-  const otherProjectsRef = useRef<HTMLDivElement>(null);
-  const normalGridRef = useRef<HTMLDivElement>(null);
-  const hasAnimatedInitialPage = useRef(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState<FilterCategory>("all");
   const isPt = language === "pt";
 
-  const projects = getProjects(isPt);
+  const allProjects = useMemo(() => getProjects(isPt), [isPt]);
 
-  const destaqueProjects = projects.filter((p) => p.destaque);
-  const normalProjects = projects.filter((p) => !p.destaque);
-  const totalPages = Math.ceil(normalProjects.length / PROJECTS_PER_PAGE);
-  const pageProjects = normalProjects.slice(
-    (currentPage - 1) * PROJECTS_PER_PAGE,
-    currentPage * PROJECTS_PER_PAGE,
-  );
-  const goToPage = (page: number) => {
-    setCurrentPage(page);
-    otherProjectsRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
+  const categoryCounts = useMemo(() => {
+    return {
+      all: allProjects.length,
+      govtech: allProjects.filter((p) => p.category === "govtech").length,
+      systems: allProjects.filter((p) => p.category === "systems").length,
+      commercial: allProjects.filter((p) => p.category === "commercial").length,
+    };
+  }, [allProjects]);
+
+  const filteredProjects = useMemo(() => {
+    if (selectedCategory === "all") return allProjects;
+    return allProjects.filter((p) => p.category === selectedCategory);
+  }, [allProjects, selectedCategory]);
+
+  const categories: { id: FilterCategory; label: string; count: number }[] = [
+    { id: "all", label: t.projects.tab_all, count: categoryCounts.all },
+    { id: "govtech", label: t.projects.tab_govtech, count: categoryCounts.govtech },
+    { id: "systems", label: t.projects.tab_systems, count: categoryCounts.systems },
+    { id: "commercial", label: t.projects.tab_commercial, count: categoryCounts.commercial },
+  ];
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -74,82 +88,22 @@ const Projects = () => {
           scrollTrigger: { trigger: subtitleRef.current, start: "top 88%" },
         },
       );
-
-      // Destaque cards — alternating slide in
-      if (destaqueRef.current) {
-        Array.from(destaqueRef.current.children).forEach((child, i) => {
-          gsap.fromTo(
-            child,
-            { opacity: 0, x: i % 2 === 0 ? -60 : 60 },
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.8,
-              ease: "power3.out",
-              scrollTrigger: { trigger: child, start: "top 88%" },
-            },
-          );
-        });
-      }
-
-      // Normal grid — stagger with scale + blur
-      if (normalGridRef.current) {
-        gsap.fromTo(
-          normalGridRef.current.children,
-          { opacity: 0, y: 50, scale: 0.92, filter: "blur(6px)" },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            filter: "blur(0px)",
-            duration: 0.55,
-            ease: "power3.out",
-            stagger: 0.09,
-            scrollTrigger: { trigger: normalGridRef.current, start: "top 88%" },
-          },
-        );
-      }
     }, sectionRef);
+
     return () => {
       ctx.revert();
     };
   }, []);
 
-  useEffect(() => {
-    if (!hasAnimatedInitialPage.current) {
-      hasAnimatedInitialPage.current = true;
-      return;
-    }
-
-    if (!normalGridRef.current) return;
-
-    const animation = gsap.fromTo(
-      normalGridRef.current.children,
-      { opacity: 0, y: 50, scale: 0.92, filter: "blur(6px)" },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        filter: "blur(0px)",
-        duration: 0.55,
-        ease: "power3.out",
-        stagger: 0.09,
-      },
-    );
-
-    return () => {
-      animation.kill();
-    };
-  }, [currentPage]);
-
   return (
     <section
       id="projects"
       ref={sectionRef}
-      className="scroll-mt-20 py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-muted/30"
+      className="scroll-mt-20 py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-muted/20 relative"
     >
-      <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-16 space-y-2">
+      <div className="container mx-auto max-w-7xl">
+        {/* Header */}
+        <div className="text-center mb-12 sm:mb-16 space-y-3">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full hud-pill text-xs font-mono text-primary border border-primary/25 mb-1">
             <Terminal className="w-3.5 h-3.5" />
             <span>[ 02 // CATÁLOGO DE ENGENHARIA ]</span>
@@ -172,282 +126,212 @@ const Projects = () => {
           </p>
         </div>
 
-        <div ref={destaqueRef} className="space-y-12 mb-20">
-          {destaqueProjects.map((project, index) => (
-            <SpotlightCard key={`destaque-${index}`} className="rounded-2xl opacity-0">
-            <Card
-              className="overflow-hidden cyber-glass cyber-corners border-white/10 hover:border-primary/50 transition-all duration-300 group shadow-2xl"
-            >
-              <div className="grid lg:grid-cols-2 gap-0">
-                <div className="relative overflow-hidden h-64 lg:h-auto min-h-[300px]">
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+        {/* Category Tabs Filter */}
+        <div className="flex items-center justify-center mb-12">
+          <div
+            role="tablist"
+            aria-label={isPt ? "Categorias de projetos" : "Project categories"}
+            className="flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-2xl cyber-glass border border-white/10 max-w-full"
+          >
+            {categories.map((tab) => {
+              const isActive = selectedCategory === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setSelectedCategory(tab.id)}
+                  className={`relative flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-mono transition-all duration-200 select-none ${
+                    isActive
+                      ? "text-primary font-semibold shadow-neon border border-primary/40 bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/[0.03] border border-transparent"
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                  <span
+                    className={`inline-flex items-center justify-center text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
+                      isActive
+                        ? "bg-primary text-primary-foreground font-bold"
+                        : "bg-white/10 text-muted-foreground"
+                    }`}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  </a>
-                  <div className="absolute top-4 right-4 z-20 flex flex-col gap-2 items-end">
-                    <Badge className="bg-primary text-primary-foreground border-0 shadow-lg px-3 py-1 text-sm">
-                      {t.projects.featured_badge}
-                    </Badge>
-                    {project.award && (
-                      <Badge className="bg-secondary text-secondary-foreground border-0 shadow-lg px-3 py-1 text-xs">
-                        {project.award}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                <div className="p-8 lg:p-10 flex flex-col justify-between bg-card/50">
-                  <div>
-                    <h3 className="text-3xl font-bold group-hover:text-primary transition-colors mb-4">
-                      {project.title}
-                    </h3>
-                    <p className="text-muted-foreground mb-8 leading-relaxed text-lg">
-                      {project.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2 mb-8">
-                      {project.technologies.map((tech, ti) => (
-                        <Badge
-                          key={ti}
-                          variant="secondary"
-                          className="bg-primary/5 text-primary hover:bg-primary/10 border-primary/20"
-                        >
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mt-auto">
-                    <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-                      <Button
-                        asChild
-                        size="lg"
-                        className="w-full bg-primary shadow-lg transition-all hover:bg-primary/90 hover:shadow-neon sm:w-auto"
-                      >
+                    {tab.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Grid of Engineering Software Windows */}
+        <motion.div
+          layout
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.map((project) => {
+              const displayUrl = formatDisplayUrl(project.liveUrl);
+
+              return (
+                <motion.div
+                  key={project.title}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="h-full"
+                >
+                  <SpotlightCard className="h-full rounded-2xl">
+                    <Card className="h-full overflow-hidden cyber-glass cyber-corners border-white/10 hover:border-primary/50 transition-all duration-300 flex flex-col justify-between group shadow-xl">
+                      {/* Software Window Header */}
+                      <div className="flex items-center justify-between px-4 py-2.5 bg-black/50 border-b border-white/5 text-xs font-mono select-none">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                            <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                          </div>
+                          <span
+                            className="text-[11px] text-muted-foreground/70 truncate max-w-[140px] sm:max-w-[180px]"
+                            title={displayUrl}
+                          >
+                            {displayUrl}
+                          </span>
+                        </div>
+
+                        <div className="shrink-0">
+                          {project.award ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-primary/15 text-primary border border-primary/30">
+                              {project.award}
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] text-emerald-400 bg-emerald-950/40 border border-emerald-500/25">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                              {t.projects.status_production}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Visual Preview */}
+                      <div className="relative aspect-[16/10] overflow-hidden bg-black/40">
                         <a
                           href={project.liveUrl}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="block w-full h-full"
                         >
-                          <ExternalLink className="mr-2 h-4 w-4" />
-                          {t.projects.view}
+                          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60 group-hover:opacity-20 transition-opacity duration-300 z-10" />
+                          <img
+                            src={project.image}
+                            alt={project.title}
+                            loading="lazy"
+                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                          />
                         </a>
-                      </Button>
-                      {project.repositoryUrl && (
-                        project.isPrivateRepo ? (
-                          <Button
-                            size="lg"
-                            variant="outline"
-                            disabled
-                            className="w-full sm:w-auto opacity-50 cursor-not-allowed border-dashed text-muted-foreground select-none"
-                            title={language === "pt" ? "Repositório privado sob termo de confidencialidade/cliente" : "Private client repository"}
-                          >
-                            <Lock className="mr-2 h-4 w-4" />
-                            <span>{t.projects.repository} ({language === "pt" ? "Privado" : "Private"})</span>
-                          </Button>
-                        ) : (
-                          <Button
-                            asChild
-                            size="lg"
-                            variant="outline"
-                            className="w-full sm:w-auto"
-                          >
-                            <a
-                              href={project.repositoryUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <Github className="mr-2 h-4 w-4" />
-                              {t.projects.repository}
-                            </a>
-                          </Button>
-                        )
-                      )}
-                    </div>
-                    {project.contribuitor && (
-                      <span className="text-muted-foreground text-sm">
-                        {t.projects.collaboration}:{" "}
-                        <span className="font-medium text-foreground">
-                          {project.contribuitor}
-                        </span>
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Card>
-            </SpotlightCard>
-          ))}
-        </div>
+                      </div>
 
-        {normalProjects.length > 0 && (
-          <div
-            ref={otherProjectsRef}
-            className="scroll-mt-20 flex items-center gap-4 mb-8"
-          >
-            <div className="h-[1px] flex-1 bg-border" />
-            <h3 className="text-2xl font-bold">
-              {t.projects.others_title}{" "}
-              <span className="text-gradient">
-                {t.projects.others_highlight}
-              </span>
-            </h3>
-            <div className="h-[1px] flex-1 bg-border" />
-          </div>
-        )}
+                      {/* Details & Actions */}
+                      <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-4">
+                        <div className="space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <h3 className="text-lg sm:text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                              {project.title}
+                            </h3>
+                            {project.destaque && (
+                              <Badge
+                                variant="outline"
+                                className="text-[10px] uppercase font-mono tracking-wider border-primary/30 text-primary bg-primary/10 shrink-0"
+                              >
+                                {t.projects.featured_badge}
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                            {project.description}
+                          </p>
+                        </div>
 
-        <div
-          ref={normalGridRef}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {pageProjects.map((project, index) => (
-            <SpotlightCard key={`normal-${index}`} className="rounded-2xl opacity-0">
-            <Card
-              className="overflow-hidden cyber-glass cyber-corners border-white/10 hover:border-primary/50 transition-all duration-300 group shadow-xl hover:scale-[1.02] flex flex-col justify-between h-full"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                </a>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
-                  {project.title}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4 leading-relaxed line-clamp-3">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {project.technologies.map((tech, ti) => (
-                    <Badge
-                      key={ti}
-                      variant="outline"
-                      className="text-xs border-primary/20 text-primary/80"
-                    >
-                      {tech}
-                    </Badge>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <Button
-                      asChild
-                      variant="ghost"
-                      size="sm"
-                      className="text-primary hover:text-primary hover:bg-primary/10 p-0 h-auto"
-                    >
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <ExternalLink className="mr-1 h-4 w-4" />
-                        {t.projects.view}
-                      </a>
-                    </Button>
-                    {project.repositoryUrl && (
-                      project.isPrivateRepo ? (
-                        <span
-                          className="inline-flex items-center text-xs text-muted-foreground/60 font-mono gap-1 cursor-not-allowed select-none py-1"
-                          title={language === "pt" ? "Repositório privado" : "Private repository"}
-                        >
-                          <Lock className="h-3 w-3" />
-                          <span>{language === "pt" ? "Privado" : "Private"}</span>
-                        </span>
-                      ) : (
-                        <Button
-                          asChild
-                          variant="ghost"
-                          size="sm"
-                          className="text-primary hover:text-primary hover:bg-primary/10 p-0 h-auto"
-                        >
-                          <a
-                            href={project.repositoryUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Github className="mr-1 h-4 w-4" />
-                            {t.projects.repository}
-                          </a>
-                        </Button>
-                      )
-                    )}
-                  </div>
-                </div>
-                {project.contribuitor && (
-                  <span className="text-xs text-muted-foreground">
-                    <Code2 className="inline h-3 w-3 mr-1" />
-                    {project.contribuitor}
-                  </span>
-                )}
-              </div>
-            </Card>
-            </SpotlightCard>
-          ))}
-        </div>
-        {totalPages > 1 && (
-          <nav
-            className="mt-10 flex items-center justify-center gap-2"
-            aria-label={isPt ? "Paginação de projetos" : "Projects pagination"}
-          >
-            <Button
-              variant="outline"
-              size="icon"
-              className="border-primary/20 hover:bg-primary/10 hover:text-primary"
-              onClick={() => goToPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              aria-label={isPt ? "Página anterior" : "Previous page"}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-              (page) => (
-                <Button
-                  key={page}
-                  variant={page === currentPage ? "default" : "outline"}
-                  size="icon"
-                  className={
-                    page === currentPage
-                      ? "shadow-neon"
-                      : "border-primary/20 hover:bg-primary/10 hover:text-primary"
-                  }
-                  onClick={() => goToPage(page)}
-                  aria-label={
-                    isPt ? `Ir para a página ${page}` : `Go to page ${page}`
-                  }
-                  aria-current={page === currentPage ? "page" : undefined}
-                >
-                  {page}
-                </Button>
-              ),
-            )}
-            <Button
-              variant="outline"
-              size="icon"
-              className="border-primary/20 hover:bg-primary/10 hover:text-primary"
-              onClick={() => goToPage(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-              aria-label={isPt ? "Próxima página" : "Next page"}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </nav>
-        )}
+                        <div className="space-y-4 pt-2">
+                          {/* Tech Pills */}
+                          <div className="flex flex-wrap gap-1.5">
+                            {project.technologies.map((tech) => (
+                              <span
+                                key={tech}
+                                className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono bg-white/[0.04] text-muted-foreground border border-white/10 group-hover:border-primary/20 group-hover:text-foreground/90 transition-colors"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+
+                          {/* Footer Actions */}
+                          <div className="flex items-center justify-between pt-3 border-t border-white/5 text-xs">
+                            <div className="flex items-center gap-2">
+                              <Button
+                                asChild
+                                size="sm"
+                                className="h-8 px-3 text-xs bg-primary text-primary-foreground hover:bg-primary/90 font-medium shadow-sm transition-all"
+                              >
+                                <a
+                                  href={project.liveUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                                  {t.projects.view}
+                                </a>
+                              </Button>
+
+                              {project.repositoryUrl && (
+                                project.isPrivateRepo ? (
+                                  <span
+                                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs text-muted-foreground/60 border border-white/10 rounded select-none font-mono"
+                                    title={t.projects.repository_private_tooltip}
+                                  >
+                                    <Lock className="h-3.5 w-3.5" />
+                                    <span>{t.projects.repository_private}</span>
+                                  </span>
+                                ) : (
+                                  <Button
+                                    asChild
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-8 px-3 text-xs border-white/15 hover:border-primary/40 hover:bg-primary/10 text-foreground transition-all"
+                                  >
+                                    <a
+                                      href={project.repositoryUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      <Github className="mr-1.5 h-3.5 w-3.5" />
+                                      {t.projects.repository}
+                                    </a>
+                                  </Button>
+                                )
+                              )}
+                            </div>
+
+                            {project.contribuitor && (
+                              <span
+                                className="text-[11px] font-mono text-muted-foreground/75 truncate max-w-[120px]"
+                                title={`Colaboração: ${project.contribuitor}`}
+                              >
+                                <Code2 className="inline h-3 w-3 mr-1 text-primary/70" />
+                                {project.contribuitor.split(",")[0]}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  </SpotlightCard>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </section>
   );
