@@ -5,6 +5,7 @@ import {
   ExternalLink,
   Code2,
   Github,
+  Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -234,21 +235,34 @@ const Projects = () => {
                         </a>
                       </Button>
                       {project.repositoryUrl && (
-                        <Button
-                          asChild
-                          size="lg"
-                          variant="outline"
-                          className="w-full sm:w-auto"
-                        >
-                          <a
-                            href={project.repositoryUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        project.isPrivateRepo ? (
+                          <Button
+                            size="lg"
+                            variant="outline"
+                            disabled
+                            className="w-full sm:w-auto opacity-50 cursor-not-allowed border-dashed text-muted-foreground select-none"
+                            title={language === "pt" ? "Repositório privado sob termo de confidencialidade/cliente" : "Private client repository"}
                           >
-                            <Github className="mr-2 h-4 w-4" />
-                            {t.projects.repository}
-                          </a>
-                        </Button>
+                            <Lock className="mr-2 h-4 w-4" />
+                            <span>{t.projects.repository} ({language === "pt" ? "Privado" : "Private"})</span>
+                          </Button>
+                        ) : (
+                          <Button
+                            asChild
+                            size="lg"
+                            variant="outline"
+                            className="w-full sm:w-auto"
+                          >
+                            <a
+                              href={project.repositoryUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <Github className="mr-2 h-4 w-4" />
+                              {t.projects.repository}
+                            </a>
+                          </Button>
+                        )
                       )}
                     </div>
                     {project.contribuitor && (
@@ -342,21 +356,31 @@ const Projects = () => {
                       </a>
                     </Button>
                     {project.repositoryUrl && (
-                      <Button
-                        asChild
-                        variant="ghost"
-                        size="sm"
-                        className="text-primary hover:text-primary hover:bg-primary/10 p-0 h-auto"
-                      >
-                        <a
-                          href={project.repositoryUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                      project.isPrivateRepo ? (
+                        <span
+                          className="inline-flex items-center text-xs text-muted-foreground/60 font-mono gap-1 cursor-not-allowed select-none py-1"
+                          title={language === "pt" ? "Repositório privado" : "Private repository"}
                         >
-                          <Github className="mr-1 h-4 w-4" />
-                          {t.projects.repository}
-                        </a>
-                      </Button>
+                          <Lock className="h-3 w-3" />
+                          <span>{language === "pt" ? "Privado" : "Private"}</span>
+                        </span>
+                      ) : (
+                        <Button
+                          asChild
+                          variant="ghost"
+                          size="sm"
+                          className="text-primary hover:text-primary hover:bg-primary/10 p-0 h-auto"
+                        >
+                          <a
+                            href={project.repositoryUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Github className="mr-1 h-4 w-4" />
+                            {t.projects.repository}
+                          </a>
+                        </Button>
+                      )
                     )}
                   </div>
                 </div>

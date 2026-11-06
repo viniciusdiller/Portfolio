@@ -4,7 +4,7 @@ import Apaixonese from "@/assets/Apaixonese.png";
 import RafaelROdrigues from "@/assets/RafaelRodrigues.png";
 import VivaMar from "@/assets/VivaMar.png";
 import RodizioRace from "@/assets/RodizioRace.png";
-import RanchoAFG from "@/assets/RanchoAfg.png";
+import PousadaPratagy from "@/assets/PousadaPratagy.png";
 import AnaliseEmail from "@/assets/AnaliseEmail.png";
 import Olimpiada from "@/assets/Olimpiada.png";
 import SiteSemiJoia from "@/assets/SiteSemiJoia.png";
@@ -26,6 +26,7 @@ export type Project = {
   technologies: string[];
   liveUrl: string;
   repositoryUrl?: string;
+  isPrivateRepo?: boolean;
   destaque: boolean;
   contribuitor?: string;
   award?: string;
@@ -82,6 +83,7 @@ export const getProjects = (isPt: boolean): Project[] => [
     contribuitor: "viniciusvalledev",
     repositoryUrl:
       "https://github.com/viniciusvalledev/LandingPage-imobiliaria",
+    isPrivateRepo: true,
   },
   {
     title: "VivaMar",
@@ -120,15 +122,16 @@ export const getProjects = (isPt: boolean): Project[] => [
     repositoryUrl: "https://github.com/SouzaDioggo/APG",
   },
   {
-    title: "Rancho AFG",
+    title: "Pousada Pratagy",
     description: isPt
-      ? "Sistema de gestão para o Rancho AFG."
-      : "Management system for Rancho AFG.",
-    image: RanchoAFG,
-    technologies: ["React", "TypeScript", "Node.js", "Supabase"],
-    liveUrl: "https://rancho-afg.vercel.app/",
+      ? "Site institucional da Pousada Pratagy em Saquarema com sistema de reservas, galeria e informações para hóspedes."
+      : "Institutional website for Pousada Pratagy in Saquarema featuring booking system, gallery, and guest information.",
+    image: PousadaPratagy,
+    technologies: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
+    liveUrl: "https://pousadapratagy.com/",
     destaque: false,
-    repositoryUrl: "https://github.com/viniciusdiller/Rancho-AFG",
+    repositoryUrl: "https://github.com/viniciusdiller/Landing-Page-Pratagy",
+    isPrivateRepo: true,
   },
   {
     title: "Gerador de QR Code",
