@@ -7,7 +7,6 @@ import RodizioRace from "@/assets/RodizioRace.png";
 import PousadaPratagy from "@/assets/PousadaPratagy.png";
 import AnaliseEmail from "@/assets/AnaliseEmail.png";
 import Olimpiada from "@/assets/Olimpiada.png";
-import SiteSemiJoia from "@/assets/SiteSemiJoia.png";
 import APGEmpresa from "@/assets/APGEmpresa.png";
 import QR from "@/assets/QR.png";
 
@@ -265,32 +264,6 @@ export const getProjects = (isPt: boolean): Project[] => [
           "Custom CMS publication engine",
           "Role-based access control (RBAC)",
           "Collaborative multi-contributor workflow",
-        ],
-  },
-  {
-    title: "Site de Semi Joias",
-    description: isPt
-      ? "E-commerce institucional e vitrine de produtos para marca de semi-joias, com foco em responsividade e catálogo de alta conversão."
-      : "E-commerce showcase platform for jewelry brand, designed with mobile-first responsive layout and conversion-focused product display.",
-    image: SiteSemiJoia,
-    technologies: ["JS", "HTML", "CSS"],
-    liveUrl: "https://site-semi-joias.vercel.app/",
-    destaque: false,
-    category: "commercial",
-    scope: isPt ? "Frontend & Vitrine E-commerce" : "Frontend & E-commerce Showcase",
-    context: isPt
-      ? "Vitrine digital e e-commerce para marca de semi-joias, projetado com foco em apelo visual, carregamento instantâneo em conexões móveis e catálogo estruturado."
-      : "Mobile-first showcase and e-commerce portal for semi-jewelry brand with optimized catalog layout.",
-    highlights: isPt
-      ? [
-          "Catálogo visual focado em conversão e usabilidade mobile",
-          "Design limpo e tipografia editorial",
-          "Arquitetura modular de componentes",
-        ]
-      : [
-          "Mobile-first conversion layout",
-          "Clean editorial typography",
-          "Modular component architecture",
         ],
   },
   {
